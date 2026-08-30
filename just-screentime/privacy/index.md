@@ -14,10 +14,12 @@ permalink: /just-screentime/privacy/
 ## English
 
 ### 1. Summary
-Just ScreenTime is designed to operate entirely on the user's Windows PC. The
-current version has no feature that connects to an external service and does
-not upload or share app data. It contains no telemetry, analytics, advertising,
-cloud sync, or remote crash-reporting SDK. It writes small diagnostic error
+Just ScreenTime's installed tracking, reporting, export, and HUD features
+operate entirely on the user's Windows PC and do not send app data to an
+external service. The only external navigation is the user-initiated Privacy
+Policy link, which opens this public page in the default browser. The app
+contains no telemetry, analytics, advertising, cloud sync, or remote
+crash-reporting SDK. It writes small diagnostic error
 logs locally when an exception occurs; those logs are never sent automatically.
 The optional Live HUD is off by default, requires valid tracking authorization,
 and uses only locally processed tracking data.
@@ -107,6 +109,14 @@ export. The app never uploads an export. The Live HUD starts off and is shown
 only after the user enables it in Settings while tracking authorization remains
 valid. Pausing tracking also stops the HUD from refreshing or displaying data.
 
+Selecting the Privacy Policy link opens this public policy website in the
+user's default browser. That navigation is user-initiated and is separate from
+the app's local data processing. The site is hosted by GitHub Pages; GitHub
+states that visitors' IP addresses are logged and stored for security purposes.
+The maintainer adds no analytics, advertising, forms, cookies, or tracking
+scripts to the policy site and receives no app usage data through it. GitHub's
+own privacy terms apply to visits to the site.
+
 Uninstalling the Store package normally removes its package-local database and
 logs, including a migration backup if Windows redirected it into package-local
 storage. An original pre-rename WinTrack database and other
@@ -134,10 +144,11 @@ Questions or requests:
 ## 日本語
 
 ### 1. 概要
-Just ScreenTime はユーザーの Windows PC 内だけで動作するよう設計された
-スクリーンタイム計測ツールです。現行版には外部サービスへ接続する機能がなく、
-アプリのデータをアップロードまたは共有しません。テレメトリ、アナリティクス、
-広告、クラウド同期、外部クラッシュレポート SDK は含みません。例外発生時には
+Just ScreenTime のインストール済み計測、レポート、エクスポート、HUD 機能は
+ユーザーの Windows PC 内だけで動作し、アプリのデータを外部サービスへ送信しません。
+外部への移動は、ユーザーが Privacy Policy リンクを選択して既定ブラウザーでこの公開
+ページを開く場合だけです。テレメトリ、アナリティクス、広告、クラウド同期、
+外部クラッシュレポート SDK は含みません。例外発生時には
 小さな診断ログを PC 内へ保存しますが、自動送信はしません。
 任意機能の Live HUD は初期設定がオフで、有効な計測認可がある場合に限り、
 端末内で処理された計測データだけを利用します。
@@ -220,6 +231,14 @@ Just ScreenTime はアプリのデータを販売、貸与、アップロード�
 アップロードすることはありません。Live HUD は初期設定がオフで、計測認可が有効な
 間にユーザーが設定画面で有効化した場合だけ表示されます。計測を停止すると、HUD の
 データ更新と表示も停止します。
+
+Privacy Policy リンクを選択すると、ユーザーの既定ブラウザーでこの公開ポリシー
+サイトを開きます。この移動はユーザー操作によるもので、アプリ内のローカルデータ
+処理とは別です。サイトは GitHub Pages でホストされ、GitHub はセキュリティ目的で
+訪問者の IP アドレスを記録・保存すると説明しています。運営者はこのポリシーサイトへ
+独自のアナリティクス、広告、フォーム、Cookie、追跡スクリプトを追加せず、サイトを
+通じてアプリ利用データを受け取りません。サイト訪問には GitHub 自身のプライバシー
+条件が適用されます。
 
 Store 版のアンインストールでは通常、パッケージ内の DB とログ、および Windows
 がパッケージ内へリダイレクトした移行バックアップが削除されます。元の旧
