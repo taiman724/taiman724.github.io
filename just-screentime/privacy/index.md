@@ -58,16 +58,28 @@ and localized product price from Microsoft Store solely to determine access and
 show Store-managed purchase information. These values are not app-usage records
 and do not include payment credentials. Microsoft Store, not Just ScreenTime,
 manages the Store account, entitlement, trial, and payment transaction.
-After a successful Store check, the app keeps a protected local license cache
+Microsoft Store may report a small timestamp rounding difference for a 15-day
+trial. The app accepts only a bounded difference, caps effective trial access
+at 15 days from the first verified observation, and does not move that deadline
+later after a refresh or restart.
+After a successful Store check, the app may keep a protected local license cache
 containing only the package identity, Full/Trial kind, verification and last-
-observed times, and trial expiration. It is used for at most 30 days when the
-Store API is temporarily unavailable; it never extends the Store trial.
+observed times, and trial expiration. A Full fallback is used for at most 30
+days when the Store API is temporarily unavailable; a Trial fallback also ends
+at its first effective 15-day deadline and never extends the Store trial.
 A separate current-user Windows Credential Locker marker stores only the
 package identity, a random cache generation, verification/observation times,
-and a revocation flag so an older cache cannot be reused by itself. It contains
-no password, Store account identifier, payment credential, or usage history.
+the effective trial expiration, and a revocation flag so an older cache cannot
+be reused by itself. It contains no password, Store account identifier, payment
+credential, or usage history.
 Windows manages Credential Locker and may synchronize it with the user's
 Windows/Microsoft account settings; Just ScreenTime does not transmit it.
+A currently valid Store-verified trial remains usable if the cache or marker
+cannot be saved, but offline fallback is unavailable without matching protected
+evidence.
+While a trial is active, the protected last-observed time is updated
+periodically and during normal app shutdown using process-monotonic elapsed
+time. This does not add any collected category or Store account information.
 
 It does **not** record window titles, document contents, URLs, keystrokes,
 clipboard, screenshots, microphone, camera, or network traffic.
@@ -112,8 +124,9 @@ days; default 90) and are then deleted by the cleanup service.
 Diary posts and settings remain until the user edits or deletes them, uses the
 relevant in-app control, deletes the database, or uninstalls the packaged app.
 The protected license cache is replaced after later successful Store checks and
-is removed when the packaged app's LocalState is removed; its fallback grant is
-never valid for more than 30 days from the recorded Store verification.
+is removed when the packaged app's LocalState is removed. A Full fallback grant
+is never valid for more than 30 days from Store verification; a Trial fallback
+also ends at the first effective 15-day deadline and Store expiration.
 The Credential Locker marker is replaced or revoked by later Store checks. It
 may remain in Windows Credential Locker after LocalState removal until Windows,
 the user, or a later app run removes or replaces it; it cannot grant access
@@ -228,14 +241,22 @@ Just ScreenTime は、ユーザー自身が PC の使用時間を把握するこ
 無料体験かどうかと有効期限、および地域に応じた表示価格を Microsoft Store から読みます。
 これらはアプリ利用記録ではなく、支払い情報を含みません。Store アカウント、権利、
 無料体験、支払い処理は Just ScreenTime ではなく Microsoft Store が管理します。
+15日間の無料体験について Store が返す有効期限に小さな時刻の丸め差がある場合は、有界な範囲で
+受理します。ただし実効期限は初回の確認から最長15日で、再確認や再起動で後ろへ動きません。
 Store の確認に成功した後、Package Identity、Full／Trial の種別、確認日時、最終確認日時、
-無料体験の有効期限だけを保護されたローカルキャッシュへ保存します。Store API を一時的に
-利用できない場合に最長30日間だけ使用し、Store の無料体験期限を延長することはありません。
+無料体験の有効期限だけを保護されたローカルキャッシュへ保存する場合があります。Store API を
+一時的に利用できない場合、Full の fallback は最長30日間、Trial は初回の実効15日期限までで、
+Store の無料体験期限を延長することはありません。
 これとは別に、古いキャッシュだけを再利用できないよう、現在のユーザーの Windows 資格情報
-マネージャーへ Package Identity、ランダムなキャッシュ世代、確認・観測日時、失効フラグだけを
-保存します。パスワード、Store アカウント識別子、支払い情報、利用履歴は含みません。
+マネージャーへ Package Identity、ランダムなキャッシュ世代、確認・観測日時、Trial の場合は
+初回の実効期限、および失効フラグだけを保存します。パスワード、Store アカウント識別子、
+支払い情報、利用履歴は含みません。
 Windows の設定によりこのマーカーが Windows／Microsoft アカウント経由で同期される場合が
 ありますが、Just ScreenTime が送信するものではありません。
+現在有効と Store が確認した無料体験は、キャッシュまたはマーカーを保存できないことだけでは
+停止しません。ただし一致する保護情報がない間はオフライン fallback を利用できません。
+無料体験中は、process-monotonic な経過時間を使って、保護された最終観測日時を定期的および
+通常終了時に更新します。収集項目や Store アカウント情報が増えることはありません。
 
 次のものは記録しません: **ウィンドウタイトル、文書内容、URL、キー入力、
 クリップボード、スクリーンショット、マイク、カメラ、ネットワーク通信**。
@@ -277,8 +298,9 @@ Windows のユーザープロファイルおよびパッケージディレクト
 日記と設定は、ユーザーが編集・削除するか、対応するアプリ内操作、DB 削除、
 またはパッケージ版のアンインストールを行うまで保持します。
 保護されたライセンスキャッシュは次回以降の Store 確認成功時に置き換えられ、
-パッケージの LocalState 削除時に削除されます。fallback として有効なのは
-Store 確認から最長30日間です。資格情報マネージャーのマーカーは、その後の Store 確認で
+パッケージの LocalState 削除時に削除されます。Full の fallback は Store 確認から
+最長30日間、Trial は初回の実効15日期限と Store 期限までです。資格情報マネージャーの
+マーカーは、その後の Store 確認で
 置換または失効されます。LocalState 削除後も Windows、ユーザー、または後のアプリ実行が
 削除・置換するまで残る場合がありますが、一致する保護キャッシュなしでは権限を付与できず、
 利用履歴ではありません。設定画面の
