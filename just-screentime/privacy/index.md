@@ -7,7 +7,7 @@ permalink: /just-screentime/privacy/
 # Just ScreenTime Privacy Policy / プライバシーポリシー
 
 **Last updated / 最終更新:** 2026-08-31
-**Applies to / 対象:** Just ScreenTime 1.2.2 (Microsoft Store / sideload)
+**Applies to / 対象:** Just ScreenTime 1.2.2 (Microsoft Store; other builds are private developer QA only / Microsoft Store、その他のビルドは開発者の非公開QA用のみ)
 
 ---
 
@@ -62,7 +62,7 @@ If tracking authorization is absent, declined, disabled, or becomes invalid, the
 HUD cannot be enabled and is stopped fail-closed.
 
 ### 3. Where data is stored and protected
-- Unpackaged build database: `%LOCALAPPDATA%\JustScreenTime\justscreentime.db`
+- Private unpackaged development/QA build database: `%LOCALAPPDATA%\JustScreenTime\justscreentime.db`
   (SQLite).
 - MSIX / Store build database:
   `%LOCALAPPDATA%\Packages\<PackageFamilyName>\LocalCache\Local\JustScreenTime\justscreentime.db`.
@@ -188,7 +188,7 @@ Just ScreenTime は、ユーザー自身が PC の使用時間を把握するこ
 fail-closed で停止します。
 
 ### 3. 保存場所と保護
-- 非パッケージ版 DB: `%LOCALAPPDATA%\JustScreenTime\justscreentime.db` (SQLite)
+- 開発者の非公開QA用・非パッケージ版 DB: `%LOCALAPPDATA%\JustScreenTime\justscreentime.db` (SQLite)
 - MSIX / Store 版 DB:
   `%LOCALAPPDATA%\Packages\<PackageFamilyName>\LocalCache\Local\JustScreenTime\justscreentime.db`
 - 診断ログ: 同じユーザー別 LocalApplicationData 内の `JustScreenTime`
