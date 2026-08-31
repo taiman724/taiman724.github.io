@@ -58,6 +58,16 @@ and localized product price from Microsoft Store solely to determine access and
 show Store-managed purchase information. These values are not app-usage records
 and do not include payment credentials. Microsoft Store, not Just ScreenTime,
 manages the Store account, entitlement, trial, and payment transaction.
+After a successful Store check, the app keeps a protected local license cache
+containing only the package identity, Full/Trial kind, verification and last-
+observed times, and trial expiration. It is used for at most 30 days when the
+Store API is temporarily unavailable; it never extends the Store trial.
+A separate current-user Windows Credential Locker marker stores only the
+package identity, a random cache generation, verification/observation times,
+and a revocation flag so an older cache cannot be reused by itself. It contains
+no password, Store account identifier, payment credential, or usage history.
+Windows manages Credential Locker and may synchronize it with the user's
+Windows/Microsoft account settings; Just ScreenTime does not transmit it.
 
 It does **not** record window titles, document contents, URLs, keystrokes,
 clipboard, screenshots, microphone, camera, or network traffic.
@@ -78,6 +88,11 @@ HUD cannot be enabled and is stopped fail-closed.
   `%LOCALAPPDATA%\Packages\<PackageFamilyName>\LocalCache\Local\JustScreenTime\justscreentime.db`.
 - Diagnostic logs: the same per-user `JustScreenTime` LocalApplicationData
   directory, normally package-redirected under `LocalCache` for the Store build.
+- Protected license-resilience cache: the Store package's LocalState, encrypted
+  and authenticated to the current Windows user by Windows Data Protection.
+- License anti-replay marker: the current user's Windows Credential Locker.
+  This marker contains only the limited security fields described above, not
+  usage data or account/payment credentials.
 - Upgrade migration only: if a pre-rename WinTrack database exists, the app
   preserves the original `%LOCALAPPDATA%\WinTrack\wintrack.db`, writes a small
   one-time migration marker beside it, and creates
@@ -96,10 +111,18 @@ days; default 90) and are then deleted by the cleanup service.
 
 Diary posts and settings remain until the user edits or deletes them, uses the
 relevant in-app control, deletes the database, or uninstalls the packaged app.
+The protected license cache is replaced after later successful Store checks and
+is removed when the packaged app's LocalState is removed; its fallback grant is
+never valid for more than 30 days from the recorded Store verification.
+The Credential Locker marker is replaced or revoked by later Store checks. It
+may remain in Windows Credential Locker after LocalState removal until Windows,
+the user, or a later app run removes or replaces it; it cannot grant access
+without a matching protected cache and is not usage-history data.
 The Settings action for deleting usage data removes measurement sessions,
 cached app metadata, and diary posts/notes. It does not reset preferences,
-delete diagnostic logs, delete exported CSV/JSON files, or delete a pre-rename
-WinTrack source database, migration marker, or migration backup.
+delete diagnostic logs, delete exported CSV/JSON files, delete the Store
+license-resilience cache/security marker, or delete a pre-rename WinTrack source
+database, migration marker, or migration backup.
 
 Each diagnostic log rolls after approximately 512 KiB and keeps one previous
 generation, for approximately 1 MiB per log name. Exported files remain until
@@ -126,6 +149,9 @@ usage history and diary data from Settings, and choose whether to create an
 export. The app never uploads an export. The Live HUD starts off and is shown
 only after the user enables it in Settings while tracking authorization remains
 valid. Pausing tracking also stops the HUD from refreshing or displaying data.
+If the Store license cannot be verified and no bounded protected fallback is
+valid, or after the trial ends, tracking, Focus Timer, and Live HUD stop while
+saved history remains available for in-app viewing and CSV/JSON export.
 
 Selecting the Privacy Policy link opens this public policy website in the
 user's default browser. That navigation is user-initiated and is separate from
@@ -202,6 +228,14 @@ Just ScreenTime は、ユーザー自身が PC の使用時間を把握するこ
 無料体験かどうかと有効期限、および地域に応じた表示価格を Microsoft Store から読みます。
 これらはアプリ利用記録ではなく、支払い情報を含みません。Store アカウント、権利、
 無料体験、支払い処理は Just ScreenTime ではなく Microsoft Store が管理します。
+Store の確認に成功した後、Package Identity、Full／Trial の種別、確認日時、最終確認日時、
+無料体験の有効期限だけを保護されたローカルキャッシュへ保存します。Store API を一時的に
+利用できない場合に最長30日間だけ使用し、Store の無料体験期限を延長することはありません。
+これとは別に、古いキャッシュだけを再利用できないよう、現在のユーザーの Windows 資格情報
+マネージャーへ Package Identity、ランダムなキャッシュ世代、確認・観測日時、失効フラグだけを
+保存します。パスワード、Store アカウント識別子、支払い情報、利用履歴は含みません。
+Windows の設定によりこのマーカーが Windows／Microsoft アカウント経由で同期される場合が
+ありますが、Just ScreenTime が送信するものではありません。
 
 次のものは記録しません: **ウィンドウタイトル、文書内容、URL、キー入力、
 クリップボード、スクリーンショット、マイク、カメラ、ネットワーク通信**。
@@ -220,6 +254,10 @@ fail-closed で停止します。
   `%LOCALAPPDATA%\Packages\<PackageFamilyName>\LocalCache\Local\JustScreenTime\justscreentime.db`
 - 診断ログ: 同じユーザー別 LocalApplicationData 内の `JustScreenTime`
   ディレクトリ（Store 版では通常 `LocalCache` 配下へリダイレクト）
+- ライセンス一時障害用の保護キャッシュ: Store パッケージの LocalState
+  （Windows Data Protection により現在の Windows ユーザーへ暗号化・認証）
+- ライセンスの再利用防止マーカー: 現在のユーザーの Windows 資格情報マネージャー
+  （上記の限定されたセキュリティ情報のみ。利用履歴やアカウント・支払い情報は含みません）
 - 旧 WinTrack 版からの移行時のみ: 元の
   `%LOCALAPPDATA%\WinTrack\wintrack.db` を残し、同じ場所に小さな移行済み
   マーカーを作成して、
@@ -237,10 +275,17 @@ Windows のユーザープロファイルおよびパッケージディレクト
 それ以降はクリーンアップサービスが削除します。
 
 日記と設定は、ユーザーが編集・削除するか、対応するアプリ内操作、DB 削除、
-またはパッケージ版のアンインストールを行うまで保持します。設定画面の
+またはパッケージ版のアンインストールを行うまで保持します。
+保護されたライセンスキャッシュは次回以降の Store 確認成功時に置き換えられ、
+パッケージの LocalState 削除時に削除されます。fallback として有効なのは
+Store 確認から最長30日間です。資格情報マネージャーのマーカーは、その後の Store 確認で
+置換または失効されます。LocalState 削除後も Windows、ユーザー、または後のアプリ実行が
+削除・置換するまで残る場合がありますが、一致する保護キャッシュなしでは権限を付与できず、
+利用履歴ではありません。設定画面の
 利用データ削除操作は、計測セッション、アプリ情報キャッシュ、日記投稿／メモを
 削除します。設定、診断ログ、保存済み CSV/JSON、旧 WinTrack の元DB、
-移行済みマーカー、移行バックアップは削除しません。
+移行済みマーカー、移行バックアップ、Store ライセンス一時障害用キャッシュと
+再利用防止マーカーは削除しません。
 
 診断ログは各ファイルがおよそ 512 KiB でローテーションし、1 世代前まで
 （ログ名ごとにおよそ 1 MiB）保持します。エクスポートファイルは、ユーザーが
@@ -265,6 +310,9 @@ Microsoft Store だけです。
 アップロードすることはありません。Live HUD は初期設定がオフで、計測認可が有効な
 間にユーザーが設定画面で有効化した場合だけ表示されます。計測を停止すると、HUD の
 データ更新と表示も停止します。
+Store ライセンスを確認できず、有効期限内の保護キャッシュもない場合、または無料体験の
+終了後は、計測、集中タイマー、Live HUD を停止します。保存済み履歴はアプリ内で閲覧でき、
+CSV／JSON へ書き出せます。
 
 Privacy Policy リンクを選択すると、ユーザーの既定ブラウザーでこの公開ポリシー
 サイトを開きます。この移動はユーザー操作によるもので、アプリ内のローカルデータ
