@@ -16,9 +16,13 @@ permalink: /just-screentime/privacy/
 ### 1. Summary
 Just ScreenTime's installed tracking, reporting, export, and HUD features
 operate entirely on the user's Windows PC and do not send app data to an
-external service. The only external navigation is the user-initiated Privacy
-Policy link, which opens this public page in the default browser. The app
-contains no telemetry, analytics, advertising, cloud sync, or remote
+external service. The app uses Microsoft Store services only to check the app
+license and trial expiration, retrieve the localized Store price, and complete
+a purchase requested by the user. It does not send usage history, diary text,
+settings, exports, or diagnostic logs to Microsoft Store and does not receive
+payment-card details. The only other external navigation is the user-initiated
+Privacy Policy link, which opens this public page in the default browser. The
+app contains no telemetry, analytics, advertising, cloud sync, or remote
 crash-reporting SDK. It writes small diagnostic error
 logs locally when an exception occurs; those logs are never sent automatically.
 The optional Live HUD is off by default, requires valid tracking authorization,
@@ -48,6 +52,12 @@ user how they spend time on their own PC:
 - Local diagnostic error logs created only when an exception occurs. They can
   contain a timestamp, component name, exception message, stack trace, and local
   file or application paths.
+
+The app also reads the current license state, trial status and expiration time,
+and localized product price from Microsoft Store solely to determine access and
+show Store-managed purchase information. These values are not app-usage records
+and do not include payment credentials. Microsoft Store, not Just ScreenTime,
+manages the Store account, entitlement, trial, and payment transaction.
 
 It does **not** record window titles, document contents, URLs, keystrokes,
 clipboard, screenshots, microphone, camera, or network traffic.
@@ -103,6 +113,14 @@ version has no server component, account system, cloud sync, telemetry,
 analytics, advertising, or remote crash reporting. Windows toast notifications
 are generated locally and stay on the device.
 
+License checks, trial status, localized pricing, and user-initiated purchases
+are handled by Microsoft Store services. Those Store operations do not include
+the usage history, diary, settings, exports, or diagnostic logs described in
+this policy. Microsoft handles any Store account and payment information under
+the [Microsoft Privacy Statement](https://privacy.microsoft.com/privacystatement).
+The supported binary distribution, purchase, and update channel is Microsoft
+Store only.
+
 Users can change measurement retention, edit or delete diary posts, delete
 usage history and diary data from Settings, and choose whether to create an
 export. The app never uploads an export. The Live HUD starts off and is shown
@@ -146,8 +164,12 @@ Questions or requests:
 ### 1. 概要
 Just ScreenTime のインストール済み計測、レポート、エクスポート、HUD 機能は
 ユーザーの Windows PC 内だけで動作し、アプリのデータを外部サービスへ送信しません。
-外部への移動は、ユーザーが Privacy Policy リンクを選択して既定ブラウザーでこの公開
-ページを開く場合だけです。テレメトリ、アナリティクス、広告、クラウド同期、
+アプリは、ライセンスと無料体験の有効期限の確認、Microsoft Store での表示価格の取得、
+およびユーザーが選択した購入手続きに限り Microsoft Store サービスを利用します。
+利用履歴、日記、設定、エクスポート、診断ログを Microsoft Store へ送信せず、
+支払いカード情報を受け取りません。それ以外の外部への移動は、ユーザーが Privacy
+Policy リンクを選択して既定ブラウザーでこの公開ページを開く場合だけです。
+テレメトリ、アナリティクス、広告、クラウド同期、
 外部クラッシュレポート SDK は含みません。例外発生時には
 小さな診断ログを PC 内へ保存しますが、自動送信はしません。
 任意機能の Live HUD は初期設定がオフで、有効な計測認可がある場合に限り、
@@ -175,6 +197,11 @@ Just ScreenTime は、ユーザー自身が PC の使用時間を把握するこ
 - 例外発生時だけ作成されるローカル診断ログ（日時、コンポーネント名、
   例外メッセージ、スタックトレース、ローカルのファイル／アプリパスを
   含む場合があります）
+
+アプリは利用可否と Store 管理の購入情報を表示するためだけに、現在のライセンス状態、
+無料体験かどうかと有効期限、および地域に応じた表示価格を Microsoft Store から読みます。
+これらはアプリ利用記録ではなく、支払い情報を含みません。Store アカウント、権利、
+無料体験、支払い処理は Just ScreenTime ではなく Microsoft Store が管理します。
 
 次のものは記録しません: **ウィンドウタイトル、文書内容、URL、キー入力、
 クリップボード、スクリーンショット、マイク、カメラ、ネットワーク通信**。
@@ -225,6 +252,13 @@ Windows のユーザープロファイルおよびパッケージディレクト
 Just ScreenTime はアプリのデータを販売、貸与、アップロード、第三者提供しません。
 現行版にはサーバー、アカウント、クラウド同期、テレメトリ、アナリティクス、
 広告、外部クラッシュレポート機能がありません。Windows 通知は端末内で生成します。
+
+ライセンス確認、無料体験の状態、地域に応じた表示価格、およびユーザーが選択した購入は
+Microsoft Store サービスが処理します。これらの Store 操作に、このポリシーで説明する
+利用履歴、日記、設定、エクスポート、診断ログは含まれません。Store アカウントと
+支払い情報は [Microsoft プライバシー ステートメント](https://privacy.microsoft.com/privacystatement)
+に基づいて Microsoft が取り扱います。正式なアプリ本体の配布、購入、更新経路は
+Microsoft Store だけです。
 
 保持期間の変更、日記の編集／削除、設定からの利用履歴・日記データ削除、
 エクスポートするかどうかと保存先の選択ができます。エクスポートをアプリが
