@@ -9,9 +9,9 @@ permalink: /just-screentime/privacy/
 Retime is the new name of Just ScreenTime. / Retime は Just ScreenTime の新しい名称です。
 
 **Last updated / 最終更新:** 2026-09-07
-**Applies to / 対象:** Retime 1.2.7 (Microsoft Store; other builds are private developer QA only / Microsoft Store、その他のビルドは開発者の非公開QA用のみ)
+**Applies to / 対象:** Retime 1.2.8 (Microsoft Store; other builds are private developer QA only / Microsoft Store、その他のビルドは開発者の非公開QA用のみ)
 
-**Version notice / バージョンについて:** The database and diagnostic-log encryption described below starts with version 1.2.7. An older Just ScreenTime installation does not gain this protection merely because this page has been updated; it applies after installing 1.2.7 and successfully migrating the local data. / 以下のDB・診断ログの暗号化は1.2.7からの変更です。このページの更新だけで旧Just ScreenTime版の保存データが暗号化されることはありません。1.2.7のインストールとローカルデータの移行が正常に完了した後に適用されます。
+**Version notice / バージョンについて:** The database and diagnostic-log encryption described below starts with version 1.2.8. An older Just ScreenTime installation does not gain this protection merely because this page has been updated; it applies after installing 1.2.8 and successfully migrating the local data. / 以下のDB・診断ログの暗号化は1.2.8からの変更です。このページの更新だけで旧Just ScreenTime版の保存データが暗号化されることはありません。1.2.8のインストールとローカルデータの移行が正常に完了した後に適用されます。
 
 ---
 
