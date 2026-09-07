@@ -4,17 +4,21 @@ title: Privacy Policy
 permalink: /just-screentime/privacy/
 ---
 
-# Just ScreenTime Privacy Policy / プライバシーポリシー
+# Retime Privacy Policy / プライバシーポリシー
 
-**Last updated / 最終更新:** 2026-08-31
-**Applies to / 対象:** Just ScreenTime 1.2.2 (Microsoft Store; other builds are private developer QA only / Microsoft Store、その他のビルドは開発者の非公開QA用のみ)
+Retime is the new name of Just ScreenTime. / Retime は Just ScreenTime の新しい名称です。
+
+**Last updated / 最終更新:** 2026-09-07
+**Applies to / 対象:** Retime 1.2.7 (Microsoft Store; other builds are private developer QA only / Microsoft Store、その他のビルドは開発者の非公開QA用のみ)
+
+**Version notice / バージョンについて:** The database and diagnostic-log encryption described below starts with version 1.2.7. An older Just ScreenTime installation does not gain this protection merely because this page has been updated; it applies after installing 1.2.7 and successfully migrating the local data. / 以下のDB・診断ログの暗号化は1.2.7からの変更です。このページの更新だけで旧Just ScreenTime版の保存データが暗号化されることはありません。1.2.7のインストールとローカルデータの移行が正常に完了した後に適用されます。
 
 ---
 
 ## English
 
 ### 1. Summary
-Just ScreenTime's installed tracking, reporting, export, and HUD features
+Retime's installed tracking, reporting, export, and HUD features
 operate entirely on the user's Windows PC and do not send app data to an
 external service. The app uses Microsoft Store services only to check the app
 license and trial expiration, retrieve the localized Store price, and complete
@@ -29,7 +33,7 @@ The optional Live HUD is off by default, requires valid tracking authorization,
 and uses only locally processed tracking data.
 
 ### 2. Data collected
-Just ScreenTime records the following locally, for the sole purpose of showing the
+Retime records the following locally, for the sole purpose of showing the
 user how they spend time on their own PC:
 
 - The executable path and process name of the foreground application.
@@ -56,7 +60,7 @@ user how they spend time on their own PC:
 The app also reads the current license state, trial status and expiration time,
 and localized product price from Microsoft Store solely to determine access and
 show Store-managed purchase information. These values are not app-usage records
-and do not include payment credentials. Microsoft Store, not Just ScreenTime,
+and do not include payment credentials. Microsoft Store, not Retime,
 manages the Store account, entitlement, trial, and payment transaction.
 Microsoft Store may report a small timestamp rounding difference for a 15-day
 trial. The app accepts only a bounded difference, caps effective trial access
@@ -73,7 +77,7 @@ the effective trial expiration, and a revocation flag so an older cache cannot
 be reused by itself. It contains no password, Store account identifier, payment
 credential, or usage history.
 Windows manages Credential Locker and may synchronize it with the user's
-Windows/Microsoft account settings; Just ScreenTime does not transmit it.
+Windows/Microsoft account settings; Retime does not transmit it.
 A currently valid Store-verified trial remains usable if the cache or marker
 cannot be saved, but offline fallback is unavailable without matching protected
 evidence.
@@ -113,13 +117,30 @@ HUD cannot be enabled and is stopped fail-closed.
   `LocalCache`.
 - CSV/JSON exports: the location explicitly selected by the user.
 
-The app relies on Windows user-profile and package-directory access controls. It
-does not add separate database encryption, so anyone who can access the user's
-Windows profile or backups may also be able to read this local data.
+The current database and app-owned legacy backup use authenticated
+ChaCha20-Poly1305 page encryption, including SQLite journals. Each database has
+a random key in an adjacent `.key` file protected by Windows Data Protection
+(DPAPI) for the current Windows user. Diagnostic logs are also protected by
+DPAPI. Existing plaintext databases are migrated through a verified copy before
+an atomic replacement; an interrupted migration is retried without overwriting
+the original with an incomplete copy. Old diagnostic logs are protected on
+startup or the next write when the files are available.
+Keep a database and its matching `.key` file together when backing up, and
+restore them under the original Windows account. A lost key or Windows profile
+may make a database unrecoverable. Windows profile/directory access controls
+also apply; encryption does not prevent access by software running as the same
+Windows user or an administrator who controls that account.
+The original pre-rename WinTrack source and user-selected CSV/JSON exports keep
+their existing, unencrypted formats. Protect those files and older external
+backups separately. Temporary files from a plaintext migration are removed
+after completion or a successful retry.
 
 ### 4. Data retention
 Raw measurement sessions are kept for the user-configured period (7, 30, or 90
-days; default 90) and are then deleted by the cleanup service.
+days; default 90). Eligible sessions are deleted on the cleanup service's next
+scheduled run while tracking is running. Cleanup is paused when tracking or
+Store access is unavailable and resumes after tracking restarts; stopping
+tracking does not delete saved history immediately.
 
 Diary posts and settings remain until the user edits or deletes them, uses the
 relevant in-app control, deletes the database, or uninstalls the packaged app.
@@ -144,7 +165,7 @@ WinTrack source database and migration backup are not subject to the 7/30/90-day
 cleanup; users who no longer need them must delete those files manually.
 
 ### 5. Data sharing and user controls
-Just ScreenTime does not sell, rent, upload, or disclose app data. The current
+Retime does not sell, rent, upload, or disclose app data. The current
 version has no server component, account system, cloud sync, telemetry,
 analytics, advertising, or remote crash reporting. Windows toast notifications
 are generated locally and stay on the device.
@@ -183,7 +204,7 @@ only the current SQLite database does not delete separately stored diagnostic
 logs, exported files, or legacy migration files.
 
 ### 6. Children
-Just ScreenTime has no account or online service and does not receive children's
+Retime has no account or online service and does not receive children's
 personal information. If a child uses the app, the same local records described
 above may be created in that child's or shared Windows profile.
 
@@ -201,7 +222,7 @@ Questions or requests:
 ## 日本語
 
 ### 1. 概要
-Just ScreenTime のインストール済み計測、レポート、エクスポート、HUD 機能は
+Retime のインストール済み計測、レポート、エクスポート、HUD 機能は
 ユーザーの Windows PC 内だけで動作し、アプリのデータを外部サービスへ送信しません。
 アプリは、ライセンスと無料体験の有効期限の確認、Microsoft Store での表示価格の取得、
 およびユーザーが選択した購入手続きに限り Microsoft Store サービスを利用します。
@@ -215,7 +236,7 @@ Policy リンクを選択して既定ブラウザーでこの公開ページを�
 端末内で処理された計測データだけを利用します。
 
 ### 2. 収集するデータ
-Just ScreenTime は、ユーザー自身が PC の使用時間を把握することだけを目的に、以下を
+Retime は、ユーザー自身が PC の使用時間を把握することだけを目的に、以下を
 ローカルに記録します:
 
 - フォアグラウンドアプリの実行ファイルパスおよびプロセス名
@@ -240,7 +261,7 @@ Just ScreenTime は、ユーザー自身が PC の使用時間を把握するこ
 アプリは利用可否と Store 管理の購入情報を表示するためだけに、現在のライセンス状態、
 無料体験かどうかと有効期限、および地域に応じた表示価格を Microsoft Store から読みます。
 これらはアプリ利用記録ではなく、支払い情報を含みません。Store アカウント、権利、
-無料体験、支払い処理は Just ScreenTime ではなく Microsoft Store が管理します。
+無料体験、支払い処理は Retime ではなく Microsoft Store が管理します。
 15日間の無料体験について Store が返す有効期限に小さな時刻の丸め差がある場合は、有界な範囲で
 受理します。ただし実効期限は初回の確認から最長15日で、再確認や再起動で後ろへ動きません。
 Store の確認に成功した後、Package Identity、Full／Trial の種別、確認日時、最終確認日時、
@@ -252,7 +273,7 @@ Store の無料体験期限を延長することはありません。
 初回の実効期限、および失効フラグだけを保存します。パスワード、Store アカウント識別子、
 支払い情報、利用履歴は含みません。
 Windows の設定によりこのマーカーが Windows／Microsoft アカウント経由で同期される場合が
-ありますが、Just ScreenTime が送信するものではありません。
+ありますが、Retime が送信するものではありません。
 現在有効と Store が確認した無料体験は、キャッシュまたはマーカーを保存できないことだけでは
 停止しません。ただし一致する保護情報がない間はオフライン fallback を利用できません。
 無料体験中は、process-monotonic な経過時間を使って、保護された最終観測日時を定期的および
@@ -287,13 +308,26 @@ fail-closed で停止します。
   バックアップがパッケージ内の `LocalCache` に置かれる場合があります
 - CSV/JSON: ユーザーが保存時に明示的に選んだ場所
 
-Windows のユーザープロファイルおよびパッケージディレクトリのアクセス制御を
-利用します。DB にアプリ独自の暗号化は追加していないため、Windows
-プロファイルやバックアップへアクセスできる人はデータを読める可能性があります。
+現在のDBとアプリが作成した旧版バックアップは、SQLite のジャーナルを含めて
+ChaCha20-Poly1305 による認証付き暗号化で保存します。DBごとのランダムな鍵は、
+隣接する `.key` ファイルに Windows Data Protection（DPAPI）で現在の Windows
+ユーザーに結び付けて保護します。診断ログも DPAPI で保護します。旧版の平文DBは
+コピーを暗号化して読み直しに成功した後に置き換えます。移行が中断した場合は
+不完全なコピーで元DBを上書きせず、再試行します。旧診断ログはファイルが使用可能な
+起動時または次回書き込み時に保護します。
+バックアップではDBと対応する `.key` ファイルを一緒に保管し、元の Windows
+アカウントで復元してください。鍵や Windows プロファイルを失うと、DBを復元できない
+場合があります。Windows のアクセス制御も利用しますが、同じ Windows ユーザーで
+動くソフトウェアや、そのアカウントを制御する管理者からのアクセスは防げません。
+旧 WinTrack の元DBと、ユーザーが保存する CSV/JSON は従来の非暗号化形式を保ちます。
+これらのファイルや以前の外部バックアップは別途保護してください。平文DBの移行で
+使用する一時ファイルは、完了または再試行の成功後に削除します。
 
 ### 4. 保持期間
-生の計測セッションはユーザー指定の期間（7／30／90 日、既定 90 日）だけ保持し、
-それ以降はクリーンアップサービスが削除します。
+生の計測セッションの保持期間はユーザー指定（7／30／90 日、既定 90 日）です。
+期限を過ぎたセッションは、計測が動作している間の次の定期クリーンアップで削除します。
+計測停止中や Store の利用権限がない間はクリーンアップも停止し、計測再開後に
+再開します。計測を止めただけで保存済み履歴が直ちに削除されることはありません。
 
 日記と設定は、ユーザーが編集・削除するか、対応するアプリ内操作、DB 削除、
 またはパッケージ版のアンインストールを行うまで保持します。
@@ -316,7 +350,7 @@ Windows のユーザープロファイルおよびパッケージディレクト
 削除する必要があります。
 
 ### 5. データ共有とユーザー操作
-Just ScreenTime はアプリのデータを販売、貸与、アップロード、第三者提供しません。
+Retime はアプリのデータを販売、貸与、アップロード、第三者提供しません。
 現行版にはサーバー、アカウント、クラウド同期、テレメトリ、アナリティクス、
 広告、外部クラッシュレポート機能がありません。Windows 通知は端末内で生成します。
 
@@ -352,7 +386,7 @@ DB だけを削除しても、別ファイルの診断ログ、エクスポー�
 ファイルは残ります。
 
 ### 6. 児童の個人情報
-Just ScreenTime にはアカウントやオンラインサービスがなく、児童の個人情報を
+Retime にはアカウントやオンラインサービスがなく、児童の個人情報を
 運営者が受け取ることはありません。児童が利用した場合は、上記と同じローカル記録が
 児童本人または共有の Windows プロファイル内に作成される場合があります。
 
