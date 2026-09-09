@@ -8,8 +8,8 @@ permalink: /just-screentime/privacy/
 
 Retime is the new name of Just ScreenTime. / Retime は Just ScreenTime の新しい名称です。
 
-**Last updated / 最終更新:** 2026-09-07
-**Applies to / 対象:** Retime 1.2.9 (Microsoft Store; other builds are private developer QA only / Microsoft Store、その他のビルドは開発者の非公開QA用のみ)
+**Last updated / 最終更新:** 2026-09-10
+**Applies to / 対象:** Retime 1.2.12 (Microsoft Store; other builds are private developer QA only / Microsoft Store、その他のビルドは開発者の非公開QA用のみ)
 
 **Version notice / バージョンについて:** The database and diagnostic-log encryption described below starts with version 1.2.9. An older Just ScreenTime installation does not gain this protection merely because this page has been updated; it applies after installing 1.2.9 and successfully migrating the local data. / 以下のDB・診断ログの暗号化は1.2.9からの変更です。このページの更新だけで旧Just ScreenTime版の保存データが暗号化されることはありません。1.2.9のインストールとローカルデータの移行が正常に完了した後に適用されます。
 
@@ -32,6 +32,12 @@ logs locally when an exception occurs; those logs are never sent automatically.
 The optional Live HUD is off by default, requires valid tracking authorization,
 and uses only locally processed tracking data.
 
+The holiday calendar, available from version 1.2.12, uses bundled data without downloads or
+calendar-account access. Selected countries are stored locally as preferences
+and retained when usage history is deleted. Remove countries in Holiday settings
+on Home. Diary writing and editing are available on the Diary page.
+These features apply after installing version 1.2.12 or later.
+
 ### 2. Data collected
 Retime records the following locally, for the sole purpose of showing the
 user how they spend time on their own PC:
@@ -47,8 +53,8 @@ user how they spend time on their own PC:
   by default), the app also generates one local diary summary from the same
   usage records after 18:00 on Sunday.
 - User-configurable settings (idle threshold, data retention days, theme,
-  shell exclusion, focus-mode allowlist, daily active limit, weekly digest,
-  focus-timer preferences, tracking authorization, and Live HUD enabled state,
+  shell exclusion, daily active limit, weekly digest, holiday-country choices,
+  tracking authorization, and Live HUD enabled state,
   transparency, display selection, and normalized drag position).
 - Application display metadata derived locally from executable files, including
   names and icons cached for the dashboard and optional Live HUD.
@@ -184,7 +190,7 @@ export. The app never uploads an export. The Live HUD starts off and is shown
 only after the user enables it in Settings while tracking authorization remains
 valid. Pausing tracking also stops the HUD from refreshing or displaying data.
 If the Store license cannot be verified and no bounded protected fallback is
-valid, or after the trial ends, tracking, Focus Timer, and Live HUD stop while
+valid, or after the trial ends, tracking and Live HUD stop and holiday details and settings are hidden while
 saved history remains available for in-app viewing and CSV/JSON export.
 
 Selecting the Privacy Policy link opens this public policy website in the
@@ -235,6 +241,11 @@ Policy リンクを選択して既定ブラウザーでこの公開ページを�
 任意機能の Live HUD は初期設定がオフで、有効な計測認可がある場合に限り、
 端末内で処理された計測データだけを利用します。
 
+1.2.12からの祝日カレンダーは同梱データを使用し、ダウンロードやカレンダーアカウントへの
+アクセスは行いません。選択した国はPC内の設定として保存し、利用履歴の削除時も保持します。
+ホームの「祝日の設定」で国の選択を解除できます。日記の投稿・編集は日記ページで行います。
+これらの機能は1.2.12以降のインストール後に適用されます。
+
 ### 2. 収集するデータ
 Retime は、ユーザー自身が PC の使用時間を把握することだけを目的に、以下を
 ローカルに記録します:
@@ -248,8 +259,8 @@ Retime は、ユーザー自身が PC の使用時間を把握することだけ
   （初期設定はオフ）、同じ利用記録から日曜18時以降に1件のローカル日記要約も
   自動生成します
 - ユーザー設定 (アイドル閾値、データ保持日数、テーマ、シェル除外、
-  フォーカス許可リスト、1日のアクティブ上限、週次ダイジェスト、
-  フォーカスタイマー設定、計測認可、Live HUD の有効状態、透過率、表示先、
+  1日のアクティブ上限、週次ダイジェスト、祝日カレンダーの国選択、
+  計測認可、Live HUD の有効状態、透過率、表示先、
   およびドラッグ位置の正規化座標)
 - 実行ファイルから端末内で取得し、ダッシュボードおよび任意の Live HUD 用に
   キャッシュするアプリ表示名・アイコンなどの表示情報
@@ -367,7 +378,7 @@ Microsoft Store だけです。
 間にユーザーが設定画面で有効化した場合だけ表示されます。計測を停止すると、HUD の
 データ更新と表示も停止します。
 Store ライセンスを確認できず、有効期限内の保護キャッシュもない場合、または無料体験の
-終了後は、計測、集中タイマー、Live HUD を停止します。保存済み履歴はアプリ内で閲覧でき、
+終了後は、計測とLive HUDを停止し、祝日情報と国設定を隠します。保存済み履歴はカレンダーで日付を選んで閲覧でき、
 CSV／JSON へ書き出せます。
 
 Privacy Policy リンクを選択すると、ユーザーの既定ブラウザーでこの公開ポリシー
