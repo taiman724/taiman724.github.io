@@ -5,6 +5,6 @@ title: H.lab Privacy Policies
 
 # H.lab Privacy Policies
 
-- [Just ScreenTime Privacy Policy / プライバシーポリシー](/just-screentime/privacy/)
+- [Retime Privacy Policy / プライバシーポリシー](/just-screentime/privacy/)
 
-This site contains public privacy policies only. Application source code is not published here.
+This site contains public privacy policies and minimal support pages only. Application source code is not published here.
