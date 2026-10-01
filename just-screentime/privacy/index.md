@@ -9,7 +9,7 @@ permalink: /just-screentime/privacy/
 Retime is the new name of Just ScreenTime. / Retime は Just ScreenTime の新しい名称です。
 
 **Last updated / 最終更新:** 2026-10-01
-**Applies to / 対象:** Retime 1.2.14 (after installing this version / この版のインストール後)
+**Applies to / 対象:** Retime 1.2.15 (after installing this version / この版のインストール後)
 
 **Version notice / バージョンについて:** Version 1.2.14 makes the base app free and introduces separately consented, optional page-usage sharing. Updating this policy does not enable sharing in older installations. Versions 1.2.12–1.2.13 use Store full/trial licensing and do not send page-usage reports. Database and diagnostic-log encryption applies from version 1.2.9 after successful local migration. / 1.2.14では本体を無料化し、別途同意した場合だけ画面の利用状況を共有する機能を追加します。このページの更新だけで旧版から送信が始まることはありません。1.2.12〜1.2.13はStoreのFull／Trialライセンスを使い、画面利用状況を送信しません。DB・診断ログの暗号化は1.2.9以降でローカル移行に成功した後に適用されます。
 
@@ -21,13 +21,13 @@ Retime is the new name of Just ScreenTime. / Retime は Just ScreenTime の新�
 
 Screen-time histories, diary text, settings and diagnostic logs stay on your Windows PC. The free base app works without a Store purchase or trial deadline. Tracking still requires your explicit consent; Live HUD is optional and initially off. Home and Diary use the same saved diary entries. The holiday calendar uses bundled data and does not access a calendar account or download holiday data.
 
-Optional **page-usage sharing** is separate from screen-time tracking. It starts off for both new and existing users. After the explanation, you may choose to help improve Retime and inform future advertising placement. Only then does the app automatically send coarse weekly page totals to the developer's service hosted on Cloudflare Workers and D1. Declining leaves all free features available. An old local-only statistics choice does not authorize sharing.
+Optional **page-usage sharing** helps us understand how Retime is used and improve its features and usability. It is separate from screen-time tracking and starts off for both new and existing users. Only if you agree does the app automatically send coarse weekly page totals to the developer's service hosted on Cloudflare Workers and D1. You can turn sharing off in Settings at any time. Declining leaves all free features available. An old local-only statistics choice does not authorize sharing.
 
 There is currently no advertising SDK, ad display, cloud sync, account system or remote crash-reporting SDK. Page sharing does not authorize future advertising. The developer does not sell diary contents or app histories, and those records are not included in page reports.
 
 ### 2. Local data
 
-After tracking consent and while tracking is enabled, the app records:
+The app stores the following locally. Screen-time sessions are recorded only after tracking consent and while tracking is enabled. Diary entries, settings and diagnostic logs can be saved independently of that tracking choice:
 
 - Foreground executable paths and process names, and per-app start/end times and durations, divided into Active, Foreground Idle and Background sessions.
 - Optional diary posts, post times and the active app name/path attached locally as context. If separately enabled, a weekly digest creates a local diary summary after 18:00 on Sunday.
@@ -42,7 +42,9 @@ The HUD reads tracker-written local state and does not independently inspect oth
 
 ### 3. Optional automatic sharing
 
-If you agree, the app counts visits and foreground time only for Home, Day detail, Diary and Settings. Returning the window to the foreground counts as a visit. Background/minimized time, sampling gaps over 30 seconds and time after five minutes without interaction are excluded. These are estimates of page use, not proof that a person looked at an advertisement. Weeks start Monday in UTC.
+We use page-level totals to analyze usage trends, improve features and screen layouts, and inform development priorities and decisions about how the app is operated. The current version does not serve ads or provide these totals to advertising providers.
+
+If you agree, the app counts visits and foreground time only for Home, Day detail, Diary and Settings. Returning the window to the foreground counts as a visit. Background/minimized time, sampling gaps over 30 seconds and time after five minutes without interaction are excluded. These are estimates of page use. Weeks start Monday in UTC.
 
 A report contains only:
 
@@ -98,13 +100,13 @@ Material data-practice changes are described in the app and this policy before e
 
 スクリーンタイムの利用履歴、日記本文、設定、診断ログはWindows PC内に保存します。基本機能は無料で、Storeでの購入や試用期限に依存しません。計測には引き続き明示的な同意が必要です。Live HUDは任意で、初期値はオフです。ホームと日記ページは同じ保存済み日記を使います。祝日カレンダーは同梱データを使い、カレンダーアカウントや外部ダウンロードを利用しません。
 
-任意の**画面利用状況の共有**は、スクリーンタイム計測とは別の設定です。新規・既存ユーザーとも初期値はオフです。説明を読んで改善と今後の広告配置の検討への協力を選んだ場合だけ、画面別の週次集計を、開発者がCloudflare WorkersとD1で運営する受信サービスへ自動送信します。拒否しても全無料機能を使えます。以前の「端末内だけの集計」への同意を送信の許可には使いません。
+任意の**画面利用状況の共有**は、Retimeの利用状況を把握し、機能や使いやすさを改善するためのものです。スクリーンタイム計測とは別の設定で、新規・既存ユーザーとも初期値はオフです。同意した場合だけ、画面別の週次集計を、開発者がCloudflare WorkersとD1で運営する受信サービスへ自動送信します。設定からいつでもオフにでき、拒否しても全無料機能を使えます。以前の「端末内だけの集計」への同意を送信の許可には使いません。
 
 現行版には広告SDK・広告表示・クラウド同期・ユーザーアカウント・外部クラッシュ送信SDKはありません。今回の共有への同意は、将来の広告表示への同意を兼ねません。日記本文や他アプリの利用履歴を開発者が販売することはなく、画面利用状況レポートにも含めません。
 
 ### 2. PC内に保存するデータ
 
-計測への同意後、計測が有効な間に以下を保存します。
+以下のデータをPC内に保存します。スクリーンタイムの利用セッションは、計測への同意後、計測が有効な間だけ記録します。日記、設定、診断ログは計測のオン・オフとは独立して保存される場合があります。
 
 - 前面アプリの実行ファイルパス・プロセス名と、アプリ別の開始・終了時刻、継続時間。Active・Fg-Idle・Backgroundに分類します。
 - 任意の日記本文、投稿日時、文脈として端末内だけで添付するアクティブなアプリ名とパス。別途有効化した週次ダイジェストは日曜18時以降にローカル日記要約を作ります。
@@ -119,7 +121,9 @@ HUDは計測コンポーネントがローカルDBへ記録した情報を読み
 
 ### 3. 任意の自動送信
 
-同意した場合だけ、ホーム・日別詳細・日記・設定の4画面について、表示回数と前面表示時間を数えます。前面へ戻した場合も1回と数えます。背面・最小化中、30秒を超えたサンプル間隔、操作から5分を超えた放置時間は除外します。これは画面利用の目安であり、広告を実際に見た時間の証明ではありません。週の区切りはUTCの月曜日です。
+画面別の集計は、利用傾向を分析し、機能や画面構成の改善、開発の優先順位やアプリの運営方針を検討するために利用します。現行版では広告の配信や、広告事業者への集計データの提供は行っていません。
+
+同意した場合だけ、ホーム・日別詳細・日記・設定の4画面について、表示回数と前面表示時間を数えます。前面へ戻した場合も1回と数えます。背面・最小化中、30秒を超えたサンプル間隔、操作から5分を超えた放置時間は除外します。これは画面利用の目安です。週の区切りはUTCの月曜日です。
 
 送信する項目は次のものに限ります。
 
