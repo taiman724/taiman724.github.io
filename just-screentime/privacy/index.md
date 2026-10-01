@@ -8,402 +8,161 @@ permalink: /just-screentime/privacy/
 
 Retime is the new name of Just ScreenTime. / Retime は Just ScreenTime の新しい名称です。
 
-**Last updated / 最終更新:** 2026-09-10
-**Applies to / 対象:** Retime 1.2.12 (Microsoft Store; other builds are private developer QA only / Microsoft Store、その他のビルドは開発者の非公開QA用のみ)
+**Last updated / 最終更新:** 2026-10-01
+**Applies to / 対象:** Retime 1.2.14 (after installing this version / この版のインストール後)
 
-**Version notice / バージョンについて:** The database and diagnostic-log encryption described below starts with version 1.2.9. An older Just ScreenTime installation does not gain this protection merely because this page has been updated; it applies after installing 1.2.9 and successfully migrating the local data. / 以下のDB・診断ログの暗号化は1.2.9からの変更です。このページの更新だけで旧Just ScreenTime版の保存データが暗号化されることはありません。1.2.9のインストールとローカルデータの移行が正常に完了した後に適用されます。
-
----
+**Version notice / バージョンについて:** Version 1.2.14 makes the base app free and introduces separately consented, optional page-usage sharing. Updating this policy does not enable sharing in older installations. Versions 1.2.12–1.2.13 use Store full/trial licensing and do not send page-usage reports. Database and diagnostic-log encryption applies from version 1.2.9 after successful local migration. / 1.2.14では本体を無料化し、別途同意した場合だけ画面の利用状況を共有する機能を追加します。このページの更新だけで旧版から送信が始まることはありません。1.2.12〜1.2.13はStoreのFull／Trialライセンスを使い、画面利用状況を送信しません。DB・診断ログの暗号化は1.2.9以降でローカル移行に成功した後に適用されます。
 
 ## English
 
 ### 1. Summary
-Retime's installed tracking, reporting, export, and HUD features
-operate entirely on the user's Windows PC and do not send app data to an
-external service. The app uses Microsoft Store services only to check the app
-license and trial expiration, retrieve the localized Store price, and complete
-a purchase requested by the user. It does not send usage history, diary text,
-settings, exports, or diagnostic logs to Microsoft Store and does not receive
-payment-card details. The only other external navigation is the user-initiated
-Privacy Policy link, which opens this public page in the default browser. The
-app contains no telemetry, analytics, advertising, cloud sync, or remote
-crash-reporting SDK. It writes small diagnostic error
-logs locally when an exception occurs; those logs are never sent automatically.
-The optional Live HUD is off by default, requires valid tracking authorization,
-and uses only locally processed tracking data.
 
-The holiday calendar, available from version 1.2.12, uses bundled data without downloads or
-calendar-account access. Selected countries are stored locally as preferences
-and retained when usage history is deleted. Remove countries in Holiday settings
-on Home. Diary writing and editing are available on the Diary page.
-These features apply after installing version 1.2.12 or later.
+**Your diary text is never sent to the server.** This remains true when optional page-usage sharing is enabled.
 
-### 2. Data collected
-Retime records the following locally, for the sole purpose of showing the
-user how they spend time on their own PC:
+Screen-time histories, diary text, settings and diagnostic logs stay on your Windows PC. The free base app works without a Store purchase or trial deadline. Tracking still requires your explicit consent; Live HUD is optional and initially off. Home and Diary use the same saved diary entries. The holiday calendar uses bundled data and does not access a calendar account or download holiday data.
 
-- The executable path and process name of the foreground application.
-- Per-application start time, end time, and duration, broken down into three
-  session types: Active (foreground + user input), Fg-Idle (foreground + user
-  idle beyond the configured threshold), and Background (app window open while
-  another app is foreground).
-- Optional diary posts entered by the user, including the post time and the
-  active application name and executable path attached as local context when
-  the post is created. If the weekly digest is explicitly enabled (it is off
-  by default), the app also generates one local diary summary from the same
-  usage records after 18:00 on Sunday.
-- User-configurable settings (idle threshold, data retention days, theme,
-  shell exclusion, daily active limit, weekly digest, holiday-country choices,
-  tracking authorization, and Live HUD enabled state,
-  transparency, display selection, and normalized drag position).
-- Application display metadata derived locally from executable files, including
-  names and icons cached for the dashboard and optional Live HUD.
-- Optional local export files (CSV/JSON) the user explicitly saves on this PC.
-- Local diagnostic error logs created only when an exception occurs. They can
-  contain a timestamp, component name, exception message, stack trace, and local
-  file or application paths.
+Optional **page-usage sharing** is separate from screen-time tracking. It starts off for both new and existing users. After the explanation, you may choose to help improve Retime and inform future advertising placement. Only then does the app automatically send coarse weekly page totals to the developer's service hosted on Cloudflare Workers and D1. Declining leaves all free features available. An old local-only statistics choice does not authorize sharing.
 
-The app also reads the current license state, trial status and expiration time,
-and localized product price from Microsoft Store solely to determine access and
-show Store-managed purchase information. These values are not app-usage records
-and do not include payment credentials. Microsoft Store, not Retime,
-manages the Store account, entitlement, trial, and payment transaction.
-Microsoft Store may report a small timestamp rounding difference for a 15-day
-trial. The app accepts only a bounded difference, caps effective trial access
-at 15 days from the first verified observation, and does not move that deadline
-later after a refresh or restart.
-After a successful Store check, the app may keep a protected local license cache
-containing only the package identity, Full/Trial kind, verification and last-
-observed times, and trial expiration. A Full fallback is used for at most 30
-days when the Store API is temporarily unavailable; a Trial fallback also ends
-at its first effective 15-day deadline and never extends the Store trial.
-A separate current-user Windows Credential Locker marker stores only the
-package identity, a random cache generation, verification/observation times,
-the effective trial expiration, and a revocation flag so an older cache cannot
-be reused by itself. It contains no password, Store account identifier, payment
-credential, or usage history.
-Windows manages Credential Locker and may synchronize it with the user's
-Windows/Microsoft account settings; Retime does not transmit it.
-A currently valid Store-verified trial remains usable if the cache or marker
-cannot be saved, but offline fallback is unavailable without matching protected
-evidence.
-While a trial is active, the protected last-observed time is updated
-periodically and during normal app shutdown using process-monotonic elapsed
-time. This does not add any collected category or Store account information.
+There is currently no advertising SDK, ad display, cloud sync, account system or remote crash-reporting SDK. Page sharing does not authorize future advertising. The developer does not sell diary contents or app histories, and those records are not included in page reports.
 
-It does **not** record window titles, document contents, URLs, keystrokes,
-clipboard, screenshots, microphone, camera, or network traffic.
+### 2. Local data
 
-Foreground application identity is obtained locally by the tracking component
-only while the current tracking disclosure has been acknowledged and tracking
-is enabled. The optional Live HUD reads tracker-written local database state,
-usage records, and the application metadata cache to show the foreground app and
-its recorded time; it does not independently read process memory or send that
-information anywhere.
-If tracking authorization is absent, declined, disabled, or becomes invalid, the
-HUD cannot be enabled and is stopped fail-closed.
+After tracking consent and while tracking is enabled, the app records:
 
-### 3. Where data is stored and protected
-- Private unpackaged development/QA build database: `%LOCALAPPDATA%\JustScreenTime\justscreentime.db`
-  (SQLite).
-- MSIX / Store build database:
-  `%LOCALAPPDATA%\Packages\<PackageFamilyName>\LocalCache\Local\JustScreenTime\justscreentime.db`.
-- Diagnostic logs: the same per-user `JustScreenTime` LocalApplicationData
-  directory, normally package-redirected under `LocalCache` for the Store build.
-- Protected license-resilience cache: the Store package's LocalState, encrypted
-  and authenticated to the current Windows user by Windows Data Protection.
-- License anti-replay marker: the current user's Windows Credential Locker.
-  This marker contains only the limited security fields described above, not
-  usage data or account/payment credentials.
-- Upgrade migration only: if a pre-rename WinTrack database exists, the app
-  preserves the original `%LOCALAPPDATA%\WinTrack\wintrack.db`, writes a small
-  one-time migration marker beside it, and creates
-  `%LOCALAPPDATA%\JustScreenTime\LegacyBackups\wintrack-v1.db`. In the Store
-  build, Windows package redirection may place the backup under package-local
-  `LocalCache`.
-- CSV/JSON exports: the location explicitly selected by the user.
+- Foreground executable paths and process names, and per-app start/end times and durations, divided into Active, Foreground Idle and Background sessions.
+- Optional diary posts, post times and the active app name/path attached locally as context. If separately enabled, a weekly digest creates a local diary summary after 18:00 on Sunday.
+- Settings including retention, idle threshold, theme, shell exclusion, goals, holiday countries, tracking authorization, optional page-sharing choice and Live HUD preferences.
+- App display names and icons derived from local executable files and cached for the UI and HUD.
+- Small local error logs when an exception occurs. These may include component names, exception messages, stack traces, timestamps and local file paths. They are never automatically uploaded.
+- CSV/JSON files that you explicitly save locally.
 
-The current database and app-owned legacy backup use authenticated
-ChaCha20-Poly1305 page encryption, including SQLite journals. Each database has
-a random key in an adjacent `.key` file protected by Windows Data Protection
-(DPAPI) for the current Windows user. Diagnostic logs are also protected by
-DPAPI. Existing plaintext databases are migrated through a verified copy before
-an atomic replacement; an interrupted migration is retried without overwriting
-the original with an incomplete copy. Old diagnostic logs are protected on
-startup or the next write when the files are available.
-Keep a database and its matching `.key` file together when backing up, and
-restore them under the original Windows account. A lost key or Windows profile
-may make a database unrecoverable. Windows profile/directory access controls
-also apply; encryption does not prevent access by software running as the same
-Windows user or an administrator who controls that account.
-The original pre-rename WinTrack source and user-selected CSV/JSON exports keep
-their existing, unencrypted formats. Protect those files and older external
-backups separately. Temporary files from a plaintext migration are removed
-after completion or a successful retry.
+The app does not record window titles, document contents, URLs, the characters you type, clipboard contents, screenshots, microphone, camera or network traffic. Page timing observes activation and input events only in Retime's own window; it does not retain key values or pointer coordinates.
 
-### 4. Data retention
-Raw measurement sessions are kept for the user-configured period (7, 30, or 90
-days; default 90). Eligible sessions are deleted on the cleanup service's next
-scheduled run while tracking is running. Cleanup is paused when tracking or
-Store access is unavailable and resumes after tracking restarts; stopping
-tracking does not delete saved history immediately.
+The HUD reads tracker-written local state and does not independently inspect other processes. If tracking authorization is absent, declined, disabled or invalid, the HUD cannot be enabled and is stopped fail-closed.
 
-Diary posts and settings remain until the user edits or deletes them, uses the
-relevant in-app control, deletes the database, or uninstalls the packaged app.
-The protected license cache is replaced after later successful Store checks and
-is removed when the packaged app's LocalState is removed. A Full fallback grant
-is never valid for more than 30 days from Store verification; a Trial fallback
-also ends at the first effective 15-day deadline and Store expiration.
-The Credential Locker marker is replaced or revoked by later Store checks. It
-may remain in Windows Credential Locker after LocalState removal until Windows,
-the user, or a later app run removes or replaces it; it cannot grant access
-without a matching protected cache and is not usage-history data.
-The Settings action for deleting usage data removes measurement sessions,
-cached app metadata, and diary posts/notes. It does not reset preferences,
-delete diagnostic logs, delete exported CSV/JSON files, delete the Store
-license-resilience cache/security marker, or delete a pre-rename WinTrack source
-database, migration marker, or migration backup.
+### 3. Optional automatic sharing
 
-Each diagnostic log rolls after approximately 512 KiB and keeps one previous
-generation, for approximately 1 MiB per log name. Exported files remain until
-the user deletes them from the location where they were saved. A legacy
-WinTrack source database and migration backup are not subject to the 7/30/90-day
-cleanup; users who no longer need them must delete those files manually.
+If you agree, the app counts visits and foreground time only for Home, Day detail, Diary and Settings. Returning the window to the foreground counts as a visit. Background/minimized time, sampling gaps over 30 seconds and time after five minutes without interaction are excluded. These are estimates of page use, not proof that a person looked at an advertisement. Weeks start Monday in UTC.
 
-### 5. Data sharing and user controls
-Retime does not sell, rent, upload, or disclose app data. The current
-version has no server component, account system, cloud sync, telemetry,
-analytics, advertising, or remote crash reporting. Windows toast notifications
-are generated locally and stay on the device.
+A report contains only:
 
-License checks, trial status, localized pricing, and user-initiated purchases
-are handled by Microsoft Store services. Those Store operations do not include
-the usage history, diary, settings, exports, or diagnostic logs described in
-this policy. Microsoft handles any Store account and payment information under
-the [Microsoft Privacy Statement](https://privacy.microsoft.com/privacystatement).
-The supported binary distribution, purchase, and update channel is Microsoft
-Store only.
+- A UTC week and one of the four fixed page names.
+- Cumulative visit counts and foreground duration, rounded down to whole seconds.
+- The app version at the first report for that week. If updated within a week, that week's aggregate can cover more than one version.
+- A random weekly report ID and revision number to replace retried reports without double-counting. This is not a persistent installation/device or account ID and is not shared across weeks. It is still a temporary report identifier, not a promise of absolute anonymity.
 
-Users can change measurement retention, edit or delete diary posts, delete
-usage history and diary data from Settings, and choose whether to create an
-export. The app never uploads an export. The Live HUD starts off and is shown
-only after the user enables it in Settings while tracking authorization remains
-valid. Pausing tracking also stops the HUD from refreshing or displaying data.
-If the Store license cannot be verified and no bounded protected fallback is
-valid, or after the trial ends, tracking and Live HUD stop and holiday details and settings are hidden while
-saved history remains available for in-app viewing and CSV/JSON export.
+No diary text, screen-time sessions, other app names/paths, exact navigation timestamps, account details, advertising ID or diagnostic log is included. No third-party analytics SDK runs in the app.
 
-Selecting the Privacy Policy link opens this public policy website in the
-user's default browser. That navigation is user-initiated and is separate from
-the app's local data processing. The site is hosted by GitHub Pages; GitHub
-states that visitors' IP addresses are logged and stored for security purposes.
-The maintainer adds no analytics, advertising, forms, cookies, or tracking
-scripts to the policy site and receives no app usage data through it. GitHub's
-own privacy terms apply to visits to the site.
+Reports go by HTTPS to the developer's Cloudflare Workers service. The destination is fixed in the app build. Requests carry no app-supplied cookies or account credentials and do not follow redirects. At most one report is attempted per 24 hours while the app runs; failures can be retried on a later day. Old pending weeks may delay the newest report. Network failure never blocks free features.
 
-Uninstalling the Store package normally removes its package-local database and
-logs, including a migration backup if Windows redirected it into package-local
-storage. An original pre-rename WinTrack database and other
-unpackaged/development data may need to be removed manually. Exported CSV/JSON
-files are outside the app package and are not deleted on uninstall. Deleting
-only the current SQLite database does not delete separately stored diagnostic
-logs, exported files, or legacy migration files.
+Cloudflare necessarily receives the source IP address and connection metadata to handle the request. The developer's statistics database stores the report fields above and the first/latest receipt times used to manage retention. These are receipt times, not page-navigation events. It does not store IP addresses or request headers, and the Worker does not log request bodies. Cloudflare's own infrastructure/security processing and backups are governed by its [Privacy Policy](https://www.cloudflare.com/privacypolicy/) and service terms. Processing may occur outside your country. The reports are accessible to the developer through the authenticated Cloudflare account; no public report-reading API is provided.
 
-### 6. Children
-Retime has no account or online service and does not receive children's
-personal information. If a child uses the app, the same local records described
-above may be created in that child's or shared Windows profile.
+Turn sharing off at any time in Settings. This stops new uploads, cancels in-flight work where possible and deletes local totals and pending report identities. A request already received by the server cannot be recalled by cancelling the connection; already received aggregates remain subject to the server retention below. Re-enabling starts a new consent period and does not send earlier local-only totals. You can review the local totals and explicitly save a JSON copy. That saved copy is not uploaded by the save action itself.
 
-### 7. Changes
-Any future change to this policy will be published at the public Privacy Policy
-URL used by the Microsoft Store alongside a new app version, and summarized in
-the app's release notes.
+Developer builds without a configured destination offer local-only page statistics instead, with their own off-by-default choice and no network sender enabled.
 
-### 8. Contact
-Questions or requests:
-**taiman.jp@gmail.com**
+### 4. Storage, protection and retention
 
----
+- The Store database is under `%LOCALAPPDATA%\Packages\<PackageFamilyName>\LocalCache\Local\JustScreenTime\justscreentime.db`. Private unpackaged development builds normally use `%LOCALAPPDATA%\JustScreenTime\justscreentime.db`.
+- The database and app-owned legacy backup use SQLite3MC ChaCha20-Poly1305 authenticated encryption, including SQLite journals. A random database key is in the adjacent `.key` file, protected with Windows DPAPI for the current Windows user. Error logs are DPAPI-protected too.
+- Plaintext upgrades verify an encrypted copy before atomic replacement. Interrupted migration does not replace the original with an incomplete copy. Missing/corrupt keys never cause an existing database to be silently recreated or erased.
+- Keep a database and its `.key` file together under the original Windows account. Losing the key or profile may make the data unrecoverable. Encryption does not protect against software or an administrator controlling the same Windows account.
+- Raw screen-time sessions are retained for the selected 7, 30 or 90 days (default 90), and removed by cleanup while tracking runs. Pausing tracking stops cleanup but does not immediately delete saved history. Diary entries and preferences remain until you delete them.
+- Local page totals cover the current UTC week and seven previous weeks. Pruning runs when the app initializes, collects or prepares a report. Data cannot be removed by the app while it is not running. Turning the option off removes all local page totals immediately.
+- Server reports older than 90 days from first receipt are deleted on the next daily cleanup or incoming report. Provider-managed recovery backups may retain deleted data for their configured recovery period; this is separate from the active statistics database.
+- Each error log rolls at about 512 KiB and retains one earlier generation (about 1 MiB per log name).
+
+The Settings action to delete usage data removes sessions, app metadata, diary posts/notes and local page totals; it also turns optional page sharing off. Other preferences remain. It does not erase diagnostic logs, previously saved exports, already received server reports, or old migration/license files.
+
+A pre-rename WinTrack source DB is preserved at `%LOCALAPPDATA%\WinTrack\wintrack.db`, with a migration marker and an app-owned backup at `%LOCALAPPDATA%\JustScreenTime\LegacyBackups\wintrack-v1.db` (subject to package path redirection). The original source and explicit CSV/JSON exports remain unencrypted and are outside normal retention. Older protected Store license caches in LocalState and anti-replay markers in Windows Credential Locker are left unused by 1.2.14. They contain package/license/security fields rather than usage histories; Windows may synchronize Credential Locker according to the account's settings. Users can remove unneeded old files separately.
+
+Uninstalling the Store package normally removes package-local data and logs. Unpackaged data, original legacy files, exports and provider-held reports are not removed just by uninstalling. Server reports expire as described above.
+
+### 5. External services and choices
+
+Microsoft Store handles app distribution and updates under the [Microsoft Privacy Statement](https://privacy.microsoft.com/privacystatement). Version 1.2.14 does not call Store purchase/trial APIs to unlock the free base features. Earlier versions may have protected, time-limited license caches and stop recording after trial expiry; installing 1.2.14 removes that base-feature restriction without deleting your history.
+
+Selecting the Privacy Policy link opens this site in your default browser. It is hosted on GitHub Pages; GitHub may retain visitor IP addresses for security. The developer adds no website analytics, ads, forms, cookies or tracking scripts to this policy page. Website access is separate from app sharing.
+
+Retime has no user accounts and the developer does not intentionally request children's personal data. Users who do not wish to share can decline or switch the option off. Advertisements and paid ad removal are not part of 1.2.14; any later change will have its own explanation and applicable choices.
+
+### 6. Changes and contact
+
+Material data-practice changes are described in the app and this policy before enabling new collection or sharing. Updating terms or continuing to use the app alone does not enable optional page sharing. Questions or requests: **taiman.jp@gmail.com**.
 
 ## 日本語
 
 ### 1. 概要
-Retime のインストール済み計測、レポート、エクスポート、HUD 機能は
-ユーザーの Windows PC 内だけで動作し、アプリのデータを外部サービスへ送信しません。
-アプリは、ライセンスと無料体験の有効期限の確認、Microsoft Store での表示価格の取得、
-およびユーザーが選択した購入手続きに限り Microsoft Store サービスを利用します。
-利用履歴、日記、設定、エクスポート、診断ログを Microsoft Store へ送信せず、
-支払いカード情報を受け取りません。それ以外の外部への移動は、ユーザーが Privacy
-Policy リンクを選択して既定ブラウザーでこの公開ページを開く場合だけです。
-テレメトリ、アナリティクス、広告、クラウド同期、
-外部クラッシュレポート SDK は含みません。例外発生時には
-小さな診断ログを PC 内へ保存しますが、自動送信はしません。
-任意機能の Live HUD は初期設定がオフで、有効な計測認可がある場合に限り、
-端末内で処理された計測データだけを利用します。
 
-1.2.12からの祝日カレンダーは同梱データを使用し、ダウンロードやカレンダーアカウントへの
-アクセスは行いません。選択した国はPC内の設定として保存し、利用履歴の削除時も保持します。
-ホームの「祝日の設定」で国の選択を解除できます。日記の投稿・編集は日記ページで行います。
-これらの機能は1.2.12以降のインストール後に適用されます。
+**日記本文はサーバーに送信しません。** 画面利用状況の共有をオンにしても、日記本文は送信対象になりません。
 
-### 2. 収集するデータ
-Retime は、ユーザー自身が PC の使用時間を把握することだけを目的に、以下を
-ローカルに記録します:
+スクリーンタイムの利用履歴、日記本文、設定、診断ログはWindows PC内に保存します。基本機能は無料で、Storeでの購入や試用期限に依存しません。計測には引き続き明示的な同意が必要です。Live HUDは任意で、初期値はオフです。ホームと日記ページは同じ保存済み日記を使います。祝日カレンダーは同梱データを使い、カレンダーアカウントや外部ダウンロードを利用しません。
 
-- フォアグラウンドアプリの実行ファイルパスおよびプロセス名
-- アプリごとの開始/終了時刻・継続秒数 (3 種類のセッションに分類:
-  Active = 前面かつ操作あり / Fg-Idle = 前面かつアイドル閾値超過 /
-  Background = 別アプリが前面・当該アプリのウィンドウは開いている)
-- ユーザーが任意に入力する日記本文、投稿時刻、および投稿時の文脈として添付される
-  アクティブなアプリ名・実行ファイルパス。週次ダイジェストを明示的に有効化した場合
-  （初期設定はオフ）、同じ利用記録から日曜18時以降に1件のローカル日記要約も
-  自動生成します
-- ユーザー設定 (アイドル閾値、データ保持日数、テーマ、シェル除外、
-  1日のアクティブ上限、週次ダイジェスト、祝日カレンダーの国選択、
-  計測認可、Live HUD の有効状態、透過率、表示先、
-  およびドラッグ位置の正規化座標)
-- 実行ファイルから端末内で取得し、ダッシュボードおよび任意の Live HUD 用に
-  キャッシュするアプリ表示名・アイコンなどの表示情報
-- ユーザーが明示的にPCへ保存するエクスポートファイル (CSV/JSON)
-- 例外発生時だけ作成されるローカル診断ログ（日時、コンポーネント名、
-  例外メッセージ、スタックトレース、ローカルのファイル／アプリパスを
-  含む場合があります）
+任意の**画面利用状況の共有**は、スクリーンタイム計測とは別の設定です。新規・既存ユーザーとも初期値はオフです。説明を読んで改善と今後の広告配置の検討への協力を選んだ場合だけ、画面別の週次集計を、開発者がCloudflare WorkersとD1で運営する受信サービスへ自動送信します。拒否しても全無料機能を使えます。以前の「端末内だけの集計」への同意を送信の許可には使いません。
 
-アプリは利用可否と Store 管理の購入情報を表示するためだけに、現在のライセンス状態、
-無料体験かどうかと有効期限、および地域に応じた表示価格を Microsoft Store から読みます。
-これらはアプリ利用記録ではなく、支払い情報を含みません。Store アカウント、権利、
-無料体験、支払い処理は Retime ではなく Microsoft Store が管理します。
-15日間の無料体験について Store が返す有効期限に小さな時刻の丸め差がある場合は、有界な範囲で
-受理します。ただし実効期限は初回の確認から最長15日で、再確認や再起動で後ろへ動きません。
-Store の確認に成功した後、Package Identity、Full／Trial の種別、確認日時、最終確認日時、
-無料体験の有効期限だけを保護されたローカルキャッシュへ保存する場合があります。Store API を
-一時的に利用できない場合、Full の fallback は最長30日間、Trial は初回の実効15日期限までで、
-Store の無料体験期限を延長することはありません。
-これとは別に、古いキャッシュだけを再利用できないよう、現在のユーザーの Windows 資格情報
-マネージャーへ Package Identity、ランダムなキャッシュ世代、確認・観測日時、Trial の場合は
-初回の実効期限、および失効フラグだけを保存します。パスワード、Store アカウント識別子、
-支払い情報、利用履歴は含みません。
-Windows の設定によりこのマーカーが Windows／Microsoft アカウント経由で同期される場合が
-ありますが、Retime が送信するものではありません。
-現在有効と Store が確認した無料体験は、キャッシュまたはマーカーを保存できないことだけでは
-停止しません。ただし一致する保護情報がない間はオフライン fallback を利用できません。
-無料体験中は、process-monotonic な経過時間を使って、保護された最終観測日時を定期的および
-通常終了時に更新します。収集項目や Store アカウント情報が増えることはありません。
+現行版には広告SDK・広告表示・クラウド同期・ユーザーアカウント・外部クラッシュ送信SDKはありません。今回の共有への同意は、将来の広告表示への同意を兼ねません。日記本文や他アプリの利用履歴を開発者が販売することはなく、画面利用状況レポートにも含めません。
 
-次のものは記録しません: **ウィンドウタイトル、文書内容、URL、キー入力、
-クリップボード、スクリーンショット、マイク、カメラ、ネットワーク通信**。
+### 2. PC内に保存するデータ
 
-フォアグラウンドアプリの識別情報は、現行の計測説明への同意が記録され、計測が
-有効な間だけ、計測コンポーネントが端末内で取得します。任意の Live HUD は、
-計測コンポーネントがローカルDBへ書き込んだ状態、利用記録、およびアプリ情報
-キャッシュを読み、前面アプリと記録済み利用時間を表示します。HUD が独自に
-プロセスメモリを読むことや、情報を外部へ送信することはありません。計測認可が
-未取得、拒否、無効、または不正な状態になった場合、HUD は有効化できず、
-fail-closed で停止します。
+計測への同意後、計測が有効な間に以下を保存します。
 
-### 3. 保存場所と保護
-- 開発者の非公開QA用・非パッケージ版 DB: `%LOCALAPPDATA%\JustScreenTime\justscreentime.db` (SQLite)
-- MSIX / Store 版 DB:
-  `%LOCALAPPDATA%\Packages\<PackageFamilyName>\LocalCache\Local\JustScreenTime\justscreentime.db`
-- 診断ログ: 同じユーザー別 LocalApplicationData 内の `JustScreenTime`
-  ディレクトリ（Store 版では通常 `LocalCache` 配下へリダイレクト）
-- ライセンス一時障害用の保護キャッシュ: Store パッケージの LocalState
-  （Windows Data Protection により現在の Windows ユーザーへ暗号化・認証）
-- ライセンスの再利用防止マーカー: 現在のユーザーの Windows 資格情報マネージャー
-  （上記の限定されたセキュリティ情報のみ。利用履歴やアカウント・支払い情報は含みません）
-- 旧 WinTrack 版からの移行時のみ: 元の
-  `%LOCALAPPDATA%\WinTrack\wintrack.db` を残し、同じ場所に小さな移行済み
-  マーカーを作成して、
-  `%LOCALAPPDATA%\JustScreenTime\LegacyBackups\wintrack-v1.db` にバックアップ
-  を作成します。Store 版では Windows のパッケージリダイレクトにより、
-  バックアップがパッケージ内の `LocalCache` に置かれる場合があります
-- CSV/JSON: ユーザーが保存時に明示的に選んだ場所
+- 前面アプリの実行ファイルパス・プロセス名と、アプリ別の開始・終了時刻、継続時間。Active・Fg-Idle・Backgroundに分類します。
+- 任意の日記本文、投稿日時、文脈として端末内だけで添付するアクティブなアプリ名とパス。別途有効化した週次ダイジェストは日曜18時以降にローカル日記要約を作ります。
+- 保持日数、アイドル閾値、テーマ、シェル除外、目標、祝日の国、計測認可、任意共有の選択、HUDなどの設定。
+- ローカルの実行ファイルから得た表示名・アイコンのキャッシュ。
+- 例外発生時の小さな診断ログ。コンポーネント、例外内容、スタックトレース、日時、ローカルパスを含む場合がありますが、自動送信しません。
+- ユーザーが明示的に保存したCSV／JSONファイル。
 
-現在のDBとアプリが作成した旧版バックアップは、SQLite のジャーナルを含めて
-ChaCha20-Poly1305 による認証付き暗号化で保存します。DBごとのランダムな鍵は、
-隣接する `.key` ファイルに Windows Data Protection（DPAPI）で現在の Windows
-ユーザーに結び付けて保護します。診断ログも DPAPI で保護します。旧版の平文DBは
-コピーを暗号化して読み直しに成功した後に置き換えます。移行が中断した場合は
-不完全なコピーで元DBを上書きせず、再試行します。旧診断ログはファイルが使用可能な
-起動時または次回書き込み時に保護します。
-バックアップではDBと対応する `.key` ファイルを一緒に保管し、元の Windows
-アカウントで復元してください。鍵や Windows プロファイルを失うと、DBを復元できない
-場合があります。Windows のアクセス制御も利用しますが、同じ Windows ユーザーで
-動くソフトウェアや、そのアカウントを制御する管理者からのアクセスは防げません。
-旧 WinTrack の元DBと、ユーザーが保存する CSV/JSON は従来の非暗号化形式を保ちます。
-これらのファイルや以前の外部バックアップは別途保護してください。平文DBの移行で
-使用する一時ファイルは、完了または再試行の成功後に削除します。
+ウィンドウタイトル、文書内容、URL、入力した文字、クリップボード、スクリーンショット、マイク、カメラ、ネットワーク通信内容は記録しません。画面滞在時間の計測ではRetime自身のウィンドウの表示・入力イベントだけを参照し、キーの値やポインター座標を保存しません。
 
-### 4. 保持期間
-生の計測セッションの保持期間はユーザー指定（7／30／90 日、既定 90 日）です。
-期限を過ぎたセッションは、計測が動作している間の次の定期クリーンアップで削除します。
-計測停止中や Store の利用権限がない間はクリーンアップも停止し、計測再開後に
-再開します。計測を止めただけで保存済み履歴が直ちに削除されることはありません。
+HUDは計測コンポーネントがローカルDBへ記録した情報を読み、独自に他のプロセスを調査しません。計測認可が未取得・拒否・無効・不正の場合、HUDは有効化できず停止します。
 
-日記と設定は、ユーザーが編集・削除するか、対応するアプリ内操作、DB 削除、
-またはパッケージ版のアンインストールを行うまで保持します。
-保護されたライセンスキャッシュは次回以降の Store 確認成功時に置き換えられ、
-パッケージの LocalState 削除時に削除されます。Full の fallback は Store 確認から
-最長30日間、Trial は初回の実効15日期限と Store 期限までです。資格情報マネージャーの
-マーカーは、その後の Store 確認で
-置換または失効されます。LocalState 削除後も Windows、ユーザー、または後のアプリ実行が
-削除・置換するまで残る場合がありますが、一致する保護キャッシュなしでは権限を付与できず、
-利用履歴ではありません。設定画面の
-利用データ削除操作は、計測セッション、アプリ情報キャッシュ、日記投稿／メモを
-削除します。設定、診断ログ、保存済み CSV/JSON、旧 WinTrack の元DB、
-移行済みマーカー、移行バックアップ、Store ライセンス一時障害用キャッシュと
-再利用防止マーカーは削除しません。
+### 3. 任意の自動送信
 
-診断ログは各ファイルがおよそ 512 KiB でローテーションし、1 世代前まで
-（ログ名ごとにおよそ 1 MiB）保持します。エクスポートファイルは、ユーザーが
-保存先から削除するまで残ります。旧 WinTrack の元DBと移行バックアップは
-7／30／90 日の自動削除対象ではなく、不要になった場合はユーザーが手動で
-削除する必要があります。
+同意した場合だけ、ホーム・日別詳細・日記・設定の4画面について、表示回数と前面表示時間を数えます。前面へ戻した場合も1回と数えます。背面・最小化中、30秒を超えたサンプル間隔、操作から5分を超えた放置時間は除外します。これは画面利用の目安であり、広告を実際に見た時間の証明ではありません。週の区切りはUTCの月曜日です。
 
-### 5. データ共有とユーザー操作
-Retime はアプリのデータを販売、貸与、アップロード、第三者提供しません。
-現行版にはサーバー、アカウント、クラウド同期、テレメトリ、アナリティクス、
-広告、外部クラッシュレポート機能がありません。Windows 通知は端末内で生成します。
+送信する項目は次のものに限ります。
 
-ライセンス確認、無料体験の状態、地域に応じた表示価格、およびユーザーが選択した購入は
-Microsoft Store サービスが処理します。これらの Store 操作に、このポリシーで説明する
-利用履歴、日記、設定、エクスポート、診断ログは含まれません。Store アカウントと
-支払い情報は [Microsoft プライバシー ステートメント](https://privacy.microsoft.com/privacystatement)
-に基づいて Microsoft が取り扱います。正式なアプリ本体の配布、購入、更新経路は
-Microsoft Store だけです。
+- UTCの週と、4種類に限定した画面名。
+- 累積表示回数、秒未満を切り捨てた前面表示時間。
+- その週に初めてレポートを送信した時点のアプリ版。同じ週に更新した場合、集計には複数の版の利用が混在する場合があります。
+- 再送による二重計上を防ぐ週単位のランダムなレポートIDと改訂番号。固定の端末・インストール・アカウントIDではなく、別の週には引き継ぎません。ただし一時的なレポート識別子なので、完全な匿名性を保証するものではありません。
 
-保持期間の変更、日記の編集／削除、設定からの利用履歴・日記データ削除、
-エクスポートするかどうかと保存先の選択ができます。エクスポートをアプリが
-アップロードすることはありません。Live HUD は初期設定がオフで、計測認可が有効な
-間にユーザーが設定画面で有効化した場合だけ表示されます。計測を停止すると、HUD の
-データ更新と表示も停止します。
-Store ライセンスを確認できず、有効期限内の保護キャッシュもない場合、または無料体験の
-終了後は、計測とLive HUDを停止し、祝日情報と国設定を隠します。保存済み履歴はカレンダーで日付を選んで閲覧でき、
-CSV／JSON へ書き出せます。
+日記本文、スクリーンタイムのセッション、他アプリの名前やパス、正確な画面遷移時刻、アカウント情報、広告ID、診断ログは送りません。第三者の解析SDKも使用しません。
 
-Privacy Policy リンクを選択すると、ユーザーの既定ブラウザーでこの公開ポリシー
-サイトを開きます。この移動はユーザー操作によるもので、アプリ内のローカルデータ
-処理とは別です。サイトは GitHub Pages でホストされ、GitHub はセキュリティ目的で
-訪問者の IP アドレスを記録・保存すると説明しています。運営者はこのポリシーサイトへ
-独自のアナリティクス、広告、フォーム、Cookie、追跡スクリプトを追加せず、サイトを
-通じてアプリ利用データを受け取りません。サイト訪問には GitHub 自身のプライバシー
-条件が適用されます。
+送信先はアプリのビルド時に固定した、開発者のCloudflare Workersサービスです。HTTPSを使い、Cookieやアカウント認証情報を付けず、リダイレクトを追跡しません。アプリ起動中に24時間あたり最大1件を試行し、通信に失敗した場合は後日再試行することがあります。未送信の古い週がある場合、最新週の送信が遅れることがあります。通信の失敗で無料機能が使えなくなることはありません。
 
-Store 版のアンインストールでは通常、パッケージ内の DB とログ、および Windows
-がパッケージ内へリダイレクトした移行バックアップが削除されます。元の旧
-WinTrack DB と非パッケージ／開発版のデータは手動削除が必要な場合があります。
-CSV/JSON はアプリ管理外なのでアンインストールでは消えません。現在の SQLite
-DB だけを削除しても、別ファイルの診断ログ、エクスポートファイル、旧版移行
-ファイルは残ります。
+通信のため、接続元IPアドレスや接続メタデータはCloudflareへ届きます。開発者の集計DBには上記レポート項目と、保持期間の管理に使う初回・最終受信時刻を保存します。これは受信時刻であり、画面遷移の時刻ではありません。IPアドレスやリクエストヘッダーは保存せず、Workerもリクエスト本文をログへ出力しません。Cloudflare自身のインフラ運用・セキュリティ処理・バックアップには、同社の[プライバシーポリシー](https://www.cloudflare.com/privacypolicy/)とサービス条件が適用されます。処理が居住国の外で行われる場合があります。集計結果は開発者の認証済みCloudflareアカウントから確認し、公開の閲覧APIは設けません。
 
-### 6. 児童の個人情報
-Retime にはアカウントやオンラインサービスがなく、児童の個人情報を
-運営者が受け取ることはありません。児童が利用した場合は、上記と同じローカル記録が
-児童本人または共有の Windows プロファイル内に作成される場合があります。
+設定でいつでも共有をオフにできます。新しい送信を停止し、可能な範囲で送信中の処理を中止して、PC内の集計と未送信レポートIDを削除します。既にサーバーへ到着したリクエストは接続中止では取り消せず、送信済み集計は下記のサーバー保持期間に従います。再度オンにした場合は新しい同意期間として開始し、以前の端末内専用の集計を送りません。PC内の集計を確認してJSONを明示的に保存できますが、その保存操作自体がファイルをアップロードすることはありません。
 
-### 7. 変更
-このポリシーを変更する場合は、新しいアプリバージョンと共に Microsoft Store で
-使用する公開 Privacy Policy URL に掲載し、リリースノートに要約を記載します。
+送信先を設定していない開発用ビルドでは、別の初期値オフの設定で端末内集計だけを提供し、送信機能は有効にしません。
 
-### 8. お問い合わせ
-**taiman.jp@gmail.com**
+### 4. 保存場所・保護・保持期間
+
+- Store版DBは `%LOCALAPPDATA%\Packages\<PackageFamilyName>\LocalCache\Local\JustScreenTime\justscreentime.db`、非パッケージの開発版は通常 `%LOCALAPPDATA%\JustScreenTime\justscreentime.db` に保存します。
+- DBとアプリ管理の旧版バックアップは、SQLiteのジャーナルも含め、SQLite3MCのChaCha20-Poly1305認証付き暗号化を使います。ランダムなDB鍵は隣接する `.key` ファイルに、現在のWindowsユーザーのDPAPIで保護して保存します。診断ログもDPAPIで保護します。
+- 平文DBの更新では暗号化コピーを検証してから置き換えます。中断時に不完全なコピーを元DBへ上書きせず、鍵の欠損・破損を理由に既存DBを黙って作り直したり消したりしません。
+- バックアップはDBと `.key` の両方を元のWindowsアカウントで保存してください。鍵やプロファイルを失うと復元できない場合があります。同じアカウントを制御するソフトウェアや管理者からのアクセスまで防ぐものではありません。
+- 生の利用セッションは選択した7／30／90日（既定90日）を保持し、計測中のクリーンアップで削除します。計測停止中はクリーンアップも停止し、停止だけで履歴が消えることはありません。日記や通常の設定はユーザーが削除するまで保持します。
+- PC内の画面別集計はUTCの今週を含め8週間分です。起動・集計・レポート準備時に期限を過ぎたものを削除します。アプリが動いていない間に削除処理は実行できません。設定をオフにしたときは端末内の全画面集計を削除します。
+- サーバーの集計は最初の受信から90日を過ぎた後、次の日次削除処理またはレポート受信時に削除します。Cloudflare管理の復旧用バックアップには、設定された復旧期間中データが残る場合があります。これは稼働中の集計DBとは別です。
+- 診断ログは約512 KiBでローテーションし、1世代前まで、ログ名ごとに合計約1 MiBを保持します。
+
+設定の「利用データ削除」はセッション、アプリ情報、日記投稿・メモ、PC内の画面集計を削除し、任意の共有をオフにします。それ以外の設定は保持します。診断ログ、保存済みエクスポート、送信済みのサーバー集計、旧版移行・ライセンス関連ファイルは消しません。
+
+旧WinTrackの元DB `%LOCALAPPDATA%\WinTrack\wintrack.db` は移行マーカーとともに残し、アプリ管理のバックアップを `%LOCALAPPDATA%\JustScreenTime\LegacyBackups\wintrack-v1.db` に保存します（Store版ではパッケージ内へリダイレクトされる場合があります）。元DBと明示保存したCSV／JSONは平文のままで、通常の保持期間の対象外です。旧版がLocalStateへ保存した保護ライセンスキャッシュとWindows資格情報マネージャーの再利用防止マーカーは1.2.14では参照せず、そのまま残します。これらは利用履歴ではなくパッケージ・ライセンス・安全確認用の情報で、資格情報マネージャーの同期はWindowsの設定に従います。不要な旧ファイルは個別に削除できます。
+
+Store版のアンインストールでは通常、パッケージ内のDB・ログが削除されます。非パッケージ版のデータ、旧版の元ファイル、エクスポート、サーバーにある集計はアンインストールだけでは消えません。サーバー集計は上記の期限で削除されます。
+
+### 5. 外部サービスと選択
+
+アプリの配布・更新はMicrosoft Storeが[Microsoftのプライバシーステートメント](https://privacy.microsoft.com/privacystatement)に基づいて行います。1.2.14は基本機能の解除のためにStoreの購入・試用APIを呼びません。旧版は保護された期限付きのライセンスキャッシュを使い、試用後に計測を止めることがあります。1.2.14への更新は保存済み履歴を消さずに基本機能の制限を解除します。
+
+Privacy Policyリンクを選ぶと、この公開ページを既定のブラウザーで開きます。GitHub Pagesでホストしており、GitHubが安全上の目的で閲覧者のIPアドレスを保持する場合があります。開発者はこのポリシーサイトへ独自の解析・広告・フォーム・Cookie・追跡スクリプトを追加しません。サイトの閲覧とアプリからの共有は別です。
+
+Retimeにはユーザーアカウントがなく、開発者が児童の個人情報を意図して求めることはありません。共有を望まない場合は拒否または設定で停止できます。1.2.14には広告表示や広告削除課金は含まれず、将来導入する場合は別途説明と必要な選択肢を設けます。
+
+### 6. 変更とお問い合わせ
+
+収集・共有の重要な変更は、有効化の前にアプリ内とこのポリシーで説明します。利用規約の更新や使い続けることだけで任意の共有を有効にはしません。ご質問・ご要望: **taiman.jp@gmail.com**。
