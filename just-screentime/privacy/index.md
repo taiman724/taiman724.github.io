@@ -8,8 +8,12 @@ permalink: /just-screentime/privacy/
 
 Retime is the new name of Just ScreenTime. / Retime は Just ScreenTime の新しい名称です。
 
-**Last updated / 最終更新:** 2026-10-01
-**Applies to / 対象:** Retime 1.2.15 (after installing this version / この版のインストール後)
+**Last updated / 最終更新:** 2026-10-07
+**Applies to / 対象:** Retime 1.2.16 (after installing this version / この版のインストール後)
+
+Version 1.2.16 adds separately agreed, optional structured diagnostics. A policy
+update does not enable this in older versions. / 1.2.16で、別途同意する任意の診断情報
+共有を追加します。ポリシーの更新だけで旧版から診断情報が送られることはありません。
 
 **Version notice / バージョンについて:** Version 1.2.14 makes the base app free and introduces separately consented, optional page-usage sharing. Updating this policy does not enable sharing in older installations. Versions 1.2.12–1.2.13 use Store full/trial licensing and do not send page-usage reports. Database and diagnostic-log encryption applies from version 1.2.9 after successful local migration. / 1.2.14では本体を無料化し、別途同意した場合だけ画面の利用状況を共有する機能を追加します。このページの更新だけで旧版から送信が始まることはありません。1.2.12〜1.2.13はStoreのFull／Trialライセンスを使い、画面利用状況を送信しません。DB・診断ログの暗号化は1.2.9以降でローカル移行に成功した後に適用されます。
 
@@ -19,7 +23,7 @@ Retime is the new name of Just ScreenTime. / Retime は Just ScreenTime の新�
 
 **Your diary text is never sent to the server.** This remains true when optional page-usage sharing is enabled.
 
-Screen-time histories, diary text, settings and diagnostic logs stay on your Windows PC. The free base app works without a Store purchase or trial deadline. Tracking still requires your explicit consent; Live HUD is optional and initially off. Home and Diary use the same saved diary entries. The holiday calendar uses bundled data and does not access a calendar account or download holiday data.
+Screen-time histories, diary text, settings and detailed raw diagnostic log files stay on your Windows PC. Separately agreed, limited diagnostic records are described in section 3a. The free base app works without a Store purchase or trial deadline. Tracking still requires your explicit consent; Live HUD is optional and initially off. Home and Diary use the same saved diary entries. The holiday calendar uses bundled data and does not access a calendar account or download holiday data.
 
 Optional **page-usage sharing** helps us understand how Retime is used and improve its features and usability. It is separate from screen-time tracking and starts off for both new and existing users. Only if you agree does the app automatically send coarse weekly page totals to the developer's service hosted on Cloudflare Workers and D1. You can turn sharing off in Settings at any time. Declining leaves all free features available. An old local-only statistics choice does not authorize sharing.
 
@@ -63,6 +67,43 @@ Turn sharing off at any time in Settings. This stops new uploads, cancels in-fli
 
 Developer builds without a configured destination offer local-only page statistics instead, with their own off-by-default choice and no network sender enabled.
 
+### 3a. Optional diagnostic sharing
+
+“Send diagnostics to help improve Retime” is a separate, initially off choice
+for new and existing users. Agreeing in its own notice, or enabling its Settings
+switch, authorizes automatic sending to the developer's Cloudflare service.
+Page-sharing/tracking consent and a policy update do not authorize diagnostics.
+All features remain available without sharing.
+
+This is a limited structured record, separate from detailed local log files.
+For UI-side errors or an observed unresponsive foreground window, it contains:
+
+- A random event retry ID and event kind (error, unhandled exception, UI unresponsive).
+- UTC occurrence time rounded to an hour; app and Windows version numbers.
+- A fixed Retime page name and last action type, such as diary save or navigation.
+- A fixed error category, numeric error code and up to eight of Retime's own compiled method names.
+- Observed unresponsive time at detection (at least ten seconds), not necessarily its final duration.
+
+No diary text, other-app histories/names, input contents, file paths, exception
+messages, memory dumps, raw log files or stable device IDs are sent. These records
+cannot identify every crash or hang: native/early startup faults and Agent faults
+may be missed. Last action is a clue, not proof of cause. Long observer gaps such
+as sleep are excluded. The normal Windows/Store diagnostic mechanism is separate.
+
+Only events captured after this separate agreement enter the encrypted local
+queue: at most 100 records, retained up to 30 days while the app runs. Matching
+hourly observations can be combined. At most one batch of 20 is attempted per
+24 hours across restarts; failed sends retry later with the same event IDs.
+HTTPS uses the build-time destination with no cookies, credentials or redirects.
+No background sender runs after the app exits. Turn the switch off to stop new
+collection/uploads, cancel in-flight work where possible and clear pending records.
+Re-enabling does not upload previous detailed local logs. Received reports cannot
+be recalled and expire 90 days after first receipt, at the next cron/ingestion.
+Cloudflare connection/IP processing, authenticated access, no request-body logging
+and infrastructure backup retention follow the service boundary in section 3.
+Deleting usage data also turns diagnostic sharing off and clears pending records;
+the pre-existing detailed local log files remain on the PC.
+
 ### 4. Storage, protection and retention
 
 - The Store database is under `%LOCALAPPDATA%\Packages\<PackageFamilyName>\LocalCache\Local\JustScreenTime\justscreentime.db`. Private unpackaged development builds normally use `%LOCALAPPDATA%\JustScreenTime\justscreentime.db`.
@@ -98,7 +139,7 @@ Material data-practice changes are described in the app and this policy before e
 
 **日記本文はサーバーに送信しません。** 画面利用状況の共有をオンにしても、日記本文は送信対象になりません。
 
-スクリーンタイムの利用履歴、日記本文、設定、診断ログはWindows PC内に保存します。基本機能は無料で、Storeでの購入や試用期限に依存しません。計測には引き続き明示的な同意が必要です。Live HUDは任意で、初期値はオフです。ホームと日記ページは同じ保存済み日記を使います。祝日カレンダーは同梱データを使い、カレンダーアカウントや外部ダウンロードを利用しません。
+スクリーンタイムの利用履歴、日記本文、設定、詳細な診断ログ原文はWindows PC内に保存します。別途同意する項目限定の診断共有は3a節で説明します。基本機能は無料で、Storeでの購入や試用期限に依存しません。計測には引き続き明示的な同意が必要です。Live HUDは任意で、初期値はオフです。ホームと日記ページは同じ保存済み日記を使います。祝日カレンダーは同梱データを使い、カレンダーアカウントや外部ダウンロードを利用しません。
 
 任意の**画面利用状況の共有**は、Retimeの利用状況を把握し、機能や使いやすさを改善するためのものです。スクリーンタイム計測とは別の設定で、新規・既存ユーザーとも初期値はオフです。同意した場合だけ、画面別の週次集計を、開発者がCloudflare WorkersとD1で運営する受信サービスへ自動送信します。設定からいつでもオフにでき、拒否しても全無料機能を使えます。以前の「端末内だけの集計」への同意を送信の許可には使いません。
 
@@ -141,6 +182,39 @@ HUDは計測コンポーネントがローカルDBへ記録した情報を読み
 設定でいつでも共有をオフにできます。新しい送信を停止し、可能な範囲で送信中の処理を中止して、PC内の集計と未送信レポートIDを削除します。既にサーバーへ到着したリクエストは接続中止では取り消せず、送信済み集計は下記のサーバー保持期間に従います。再度オンにした場合は新しい同意期間として開始し、以前の端末内専用の集計を送りません。PC内の集計を確認してJSONを明示的に保存できますが、その保存操作自体がファイルをアップロードすることはありません。
 
 送信先を設定していない開発用ビルドでは、別の初期値オフの設定で端末内集計だけを提供し、送信機能は有効にしません。
+
+### 3a. 任意の診断情報共有
+
+「診断情報を送信して改善に協力する」は、画面利用状況共有とは別の設定です。
+新規・既存ユーザーとも初期値はオフです。専用の説明で同意するか、設定でオンにした
+場合だけ、開発者のCloudflareサービスへ自動送信します。計測・画面利用状況共有への
+同意やポリシー更新を診断送信の同意に流用しません。拒否しても全機能を使えます。
+
+既存の詳細ログファイルとは別に、画面側で検知したエラーや前面ウィンドウの応答停止
+について、次の項目だけを持つ診断記録を作成します。
+
+- 再送を重複計上しないためのランダムな事象IDと種類（エラー・未処理例外・UI応答停止）。
+- 1時間単位に丸めたUTC発生時刻、アプリとWindowsのバージョン。
+- 固定のRetime画面名と直前の操作種別（例: 日記保存、画面移動）。
+- 固定のエラー分類、数値エラーコード、Retime自身の処理名の並び（最大8個）。
+- 検知時に観測した応答停止時間（10秒以上）。最終的な停止時間とは限りません。
+
+日記本文、他アプリの履歴や名前、入力内容、ファイルパス、例外メッセージ、メモリの
+内容、詳細ログ原文、固定の端末IDは送りません。全障害を捕捉できるものではなく、
+ネイティブ処理での強制終了・初期起動・Agentの障害などは記録できない場合があります。
+直前の操作は原因の手がかりであり、原因の断定ではありません。スリープなどで監視
+自体が長く止まった時間は除外します。Windows／Store標準の診断収集とは別の仕組みです。
+
+この同意以降の事象だけを暗号化DBへ最大100件、アプリ稼働中に最大30日保持します。
+同じ時間帯の同種の記録はまとめる場合があります。再起動をまたいで24時間に最大1回、
+20件までを送信試行し、失敗時は同じ事象IDで後日再試行します。ビルド時に固定した
+HTTPS宛先を使い、Cookie・認証情報は付けず、リダイレクトも追跡しません。アプリ終了後
+に独立した送信処理を動かしません。設定をオフにすると新たな収集・送信を停止し、
+可能な範囲で通信を中止して未送信記録を削除します。再同意しても過去の詳細ログは
+送りません。受信済み記録の取消はできず、初回受信から90日後、次のCron／受信時に
+削除します。Cloudflareが通信に使うIP情報、認証済み閲覧、リクエスト本文の非記録、
+基盤バックアップの保持は3節と同じです。「利用データ削除」でも診断共有をオフにして
+未送信記録を削除します。従来の端末内詳細ログファイルは保持します。
 
 ### 4. 保存場所・保護・保持期間
 
