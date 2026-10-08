@@ -4,11 +4,17 @@ title: Privacy Policy
 permalink: /just-screentime/privacy/
 ---
 
+---
+layout: page
+title: Privacy Policy
+permalink: /privacy/
+---
+
 # Retime Privacy Policy / プライバシーポリシー
 
 Retime is the new name of Just ScreenTime. / Retime は Just ScreenTime の新しい名称です。
 
-**Last updated / 最終更新:** 2026-10-07
+**Last updated / 最終更新:** 2026-10-08
 **Applies to / 対象:** Retime 1.2.16 (after installing this version / この版のインストール後)
 
 Version 1.2.16 adds separately agreed, optional structured diagnostics. A policy
@@ -80,9 +86,20 @@ For UI-side errors or an observed unresponsive foreground window, it contains:
 
 - A random event retry ID and event kind (error, unhandled exception, UI unresponsive).
 - UTC occurrence time rounded to an hour; app and Windows version numbers.
+- Windows App SDK deployment type and runtime version, and process/OS architecture (such as x64 or ARM64); unavailable values are marked unknown.
 - A fixed Retime page name and last action type, such as diary save or navigation.
 - A fixed error category, numeric error code and up to eight of Retime's own compiled method names.
 - Observed unresponsive time at detection (at least ten seconds), not necessarily its final duration.
+
+After consent, a separate startup observation records a fresh random retry ID,
+the same version/environment fields and rounded hour, and the last reached stage
+(services/database ready, main window created, application initialization complete).
+An observation begun when you opt in during an existing process is labeled separately;
+it does not reconstruct earlier startup activity. No persistent device ID is used.
+These observations also send when there are no errors, allowing counts of observed
+starts and completed initialization to be compared. They cannot count failures before
+the app/database can run, and an absent completion report is not proof of a crash.
+Expanded sharing requires the new notice; any earlier diagnostic consent is not reused.
 
 No diary text, other-app histories/names, input contents, file paths, exception
 messages, memory dumps, raw log files or stable device IDs are sent. These records
@@ -91,9 +108,12 @@ may be missed. Last action is a clue, not proof of cause. Long observer gaps suc
 as sleep are excluded. The normal Windows/Store diagnostic mechanism is separate.
 
 Only events captured after this separate agreement enter the encrypted local
-queue: at most 100 records, retained up to 30 days while the app runs. Matching
-hourly observations can be combined. At most one batch of 20 is attempted per
-24 hours across restarts; failed sends retry later with the same event IDs.
+queue: at most 100 error observations and 100 startup observations, retained up to
+30 days while the app runs. Matching hourly errors can be combined. At most one
+batch of 20 errors and 20 startup observations is attempted per 24 hours across
+restarts; failed sends retry later with the same IDs. Startup stages update one
+observation rather than adding another start. These bounded, opt-in, delayed
+reports are not complete user counts or a crash rate for all installations.
 HTTPS uses the build-time destination with no cookies, credentials or redirects.
 No background sender runs after the app exits. Turn the switch off to stop new
 collection/uploads, cancel in-flight work where possible and clear pending records.
@@ -195,9 +215,18 @@ HUDは計測コンポーネントがローカルDBへ記録した情報を読み
 
 - 再送を重複計上しないためのランダムな事象IDと種類（エラー・未処理例外・UI応答停止）。
 - 1時間単位に丸めたUTC発生時刻、アプリとWindowsのバージョン。
+- Windows App SDKの配布方式と実行バージョン、プロセスとOSの種類（x64、ARM64など）。取得できない値は不明とします。
 - 固定のRetime画面名と直前の操作種別（例: 日記保存、画面移動）。
 - 固定のエラー分類、数値エラーコード、Retime自身の処理名の並び（最大8個）。
 - 検知時に観測した応答停止時間（10秒以上）。最終的な停止時間とは限りません。
+
+同意後は、起動状況の記録も別に作成します。起動ごとのランダムな再送ID、上記と同じ
+バージョン・実行環境・時間単位の時刻、最後に到達した段階（サービスとDBの準備、
+メイン画面の作成、アプリの初期化完了）を記録します。動作中に同意した場合は別の種類に
+分け、同意前の起動状況をさかのぼって収集しません。固定の端末IDは使いません。
+エラーがなくても送信し、観測できた起動と初期化完了の件数を比較します。アプリやDBが
+動き始める前の失敗は数えられず、完了報告がないことだけでクラッシュとは判定しません。
+追加項目を含む説明で同意を確認し、以前の診断共有への同意は流用しません。
 
 日記本文、他アプリの履歴や名前、入力内容、ファイルパス、例外メッセージ、メモリの
 内容、詳細ログ原文、固定の端末IDは送りません。全障害を捕捉できるものではなく、
@@ -205,9 +234,11 @@ HUDは計測コンポーネントがローカルDBへ記録した情報を読み
 直前の操作は原因の手がかりであり、原因の断定ではありません。スリープなどで監視
 自体が長く止まった時間は除外します。Windows／Store標準の診断収集とは別の仕組みです。
 
-この同意以降の事象だけを暗号化DBへ最大100件、アプリ稼働中に最大30日保持します。
-同じ時間帯の同種の記録はまとめる場合があります。再起動をまたいで24時間に最大1回、
-20件までを送信試行し、失敗時は同じ事象IDで後日再試行します。ビルド時に固定した
+この同意以降の記録だけを暗号化DBへエラー最大100件・起動状況最大100件、アプリ稼働中に
+最大30日保持します。同じ時間帯の同種のエラーはまとめる場合があります。再起動をまたいで
+24時間に最大1回、エラー20件・起動状況20件までを送信試行し、失敗時は同じIDで後日再試行します。
+起動段階が進んだ場合は同じ記録を更新し、起動件数を重複加算しません。任意参加・件数制限・
+送信遅延があるため、全利用者数や全インストールのクラッシュ率を表すものではありません。ビルド時に固定した
 HTTPS宛先を使い、Cookie・認証情報は付けず、リダイレクトも追跡しません。アプリ終了後
 に独立した送信処理を動かしません。設定をオフにすると新たな収集・送信を停止し、
 可能な範囲で通信を中止して未送信記録を削除します。再同意しても過去の詳細ログは
