@@ -14,8 +14,8 @@ permalink: /privacy/
 
 Retime is the new name of Just ScreenTime. / Retime は Just ScreenTime の新しい名称です。
 
-**Last updated / 最終更新:** 2026-10-08
-**Applies to / 対象:** Retime 1.2.16 (after installing this version / この版のインストール後)
+**Last updated / 最終更新:** 2026-10-11
+**Applies to / 対象:** Retime 1.2.17 (after installing this version / この版のインストール後)
 
 Version 1.2.16 adds separately agreed, optional structured diagnostics. A policy
 update does not enable this in older versions. / 1.2.16で、別途同意する任意の診断情報
